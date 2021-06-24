@@ -38,7 +38,7 @@
 #include "proto.h"
 
 #include "config.h"
-#include "doomtype.h"
+#include "doomtype.hpp"
 
 static HANDLE    midi_process_in;  // Standard In.
 static HANDLE    midi_process_out; // Standard Out.
