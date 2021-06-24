@@ -89,14 +89,15 @@ typedef PACKED_STRUCT (
 // A single patch from a texture definition,
 //  basically a rectangular area within
 //  the texture rectangle.
-typedef struct
+typedef struct texpatch_t
 {
     // Block origin (allways UL),
     // which has allready accounted
     // for the internal origin of the patch.
-    short	originx;	
+    short	originx;
     short	originy;
     int		patch;
+
 } texpatch_t;
 
 

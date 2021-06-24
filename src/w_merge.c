@@ -38,17 +38,19 @@ typedef enum
     SECTION_SPRITES,
 } section_t;
 
-typedef struct
+typedef struct searchlist_t
 {
     lumpinfo_t **lumps;
     int numlumps;
+
 } searchlist_t;
 
-typedef struct
+typedef struct sprite_frame_t
 {
     char sprname[4];
     char frame;
     lumpinfo_t *angle_lumps[8];
+
 } sprite_frame_t;
 
 static searchlist_t iwad;

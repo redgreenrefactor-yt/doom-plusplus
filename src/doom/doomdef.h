@@ -47,15 +47,16 @@
 // The current state of the game: whether we are
 // playing, gazing at the intermission screen,
 // the game final animation, or a demo. 
-typedef enum
+typedef enum gamestate_t
 {
     GS_LEVEL,
     GS_INTERMISSION,
     GS_FINALE,
     GS_DEMOSCREEN,
+
 } gamestate_t;
 
-typedef enum
+typedef enum gameaction_t
 {
     ga_nothing,
     ga_loadlevel,
@@ -67,6 +68,7 @@ typedef enum
     ga_victory,
     ga_worlddone,
     ga_screenshot
+
 } gameaction_t;
 
 //
@@ -85,7 +87,7 @@ typedef enum
 //
 // Key cards.
 //
-typedef enum
+typedef enum card_t
 {
     it_bluecard,
     it_yellowcard,
@@ -93,9 +95,10 @@ typedef enum
     it_blueskull,
     it_yellowskull,
     it_redskull,
-    
+
     NUMCARDS
-    
+
+
 } card_t;
 
 
@@ -103,7 +106,7 @@ typedef enum
 // The defined weapons,
 //  including a marker indicating
 //  user has not changed weapon.
-typedef enum
+typedef enum weapontype_t
 {
     wp_fist,
     wp_pistol,
@@ -116,28 +119,30 @@ typedef enum
     wp_supershotgun,
 
     NUMWEAPONS,
-    
+
     // No pending weapon change.
     wp_nochange
+
 
 } weapontype_t;
 
 
 // Ammunition types defined.
-typedef enum
+typedef enum ammotype_t
 {
     am_clip,	// Pistol / chaingun ammo.
     am_shell,	// Shotgun / double barreled shotgun.
     am_cell,	// Plasma rifle, BFG.
     am_misl,	// Missile launcher.
     NUMAMMO,
-    am_noammo	// Unlimited for chainsaw / fist.	
+    am_noammo	// Unlimited for chainsaw / fist.
+
 
 } ammotype_t;
 
 
 // Power up artifacts.
-typedef enum
+typedef enum powertype_t
 {
     pw_invulnerability,
     pw_strength,
@@ -149,7 +154,8 @@ typedef enum
     // [crispy] showfps and mapcoords are now "powers"
     pw_showfps,
     pw_mapcoords
-    
+
+
 } powertype_t;
 
 
@@ -159,13 +165,14 @@ typedef enum
 //  how many seconds till expiration,
 //  assuming TICRATE is 35 ticks/second.
 //
-typedef enum
+typedef enum powerduration_t
 {
     INVULNTICS	= (30*TICRATE),
     INVISTICS	= (60*TICRATE),
     INFRATICS	= (120*TICRATE),
     IRONTICS	= (60*TICRATE)
-    
+
+
 } powerduration_t;
 
 #endif          // __DOOMDEF__

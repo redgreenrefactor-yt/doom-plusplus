@@ -108,11 +108,12 @@ typedef bool boolean;
 
 #else
 
-typedef enum 
+typedef enum boolean
 {
-    false, 
+    false,
     true
-} boolean;
+
+}boolean;
 
 #endif
 

@@ -20,11 +20,12 @@
 #include "txt_gui.h"
 #include "txt_desktop.h"
 
-typedef struct
+typedef struct txt_callback_t
 {
     char *signal_name;
     TxtWidgetSignalFunc func;
     void *user_data;
+
 } txt_callback_t;
 
 struct txt_callback_table_s

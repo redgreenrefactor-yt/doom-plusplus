@@ -28,10 +28,11 @@
 #include "deh_defs.h"
 #include "deh_io.h"
 
-typedef enum
+typedef enum deh_input_type_t
 {
     DEH_INPUT_FILE,
     DEH_INPUT_LUMP
+
 } deh_input_type_t;
 
 struct deh_context_s

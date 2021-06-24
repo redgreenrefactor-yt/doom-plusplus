@@ -21,7 +21,7 @@
 #include "net_defs.h"
 #include "net_packet.h"
 
-typedef enum
+typedef enum net_connstate_t
 {
     // Client has sent a SYN, is waiting for a SYN in response.
     NET_CONN_STATE_CONNECTING,
@@ -42,11 +42,12 @@ typedef enum
     // the other end has successfully disconnected as well.
     NET_CONN_STATE_DISCONNECTED_SLEEP,
 
+
 } net_connstate_t;
 
 // Reason a connection was terminated
 
-typedef enum
+typedef enum net_disconnect_reason_t
 {
     // As the result of a local disconnect request
 
@@ -60,13 +61,14 @@ typedef enum
 
     NET_DISCONNECT_TIMEOUT,
 
+
 } net_disconnect_reason_t;
 
 #define MAX_RETRIES 5
 
 typedef struct net_reliable_packet_s net_reliable_packet_t;
 
-typedef struct 
+typedef struct net_connection_t
 {
     net_connstate_t state;
     net_disconnect_reason_t disconnect_reason;
@@ -79,6 +81,7 @@ typedef struct
     net_reliable_packet_t *reliable_packets;
     int reliable_send_seq;
     int reliable_recv_seq;
+
 } net_connection_t;
 
 

@@ -64,11 +64,11 @@
 // Note: transformed values not buffered locally,
 //  like some DOOM-alikes ("wt", "WebView") did.
 //
-typedef struct
+typedef struct vertex_t
 {
     fixed_t	x;
     fixed_t	y;
-    
+
 // [crispy] remove slime trails
 // vertex coordinates *only* used in rendering that have been
 // moved towards the linedef associated with their seg by projecting them
@@ -76,6 +76,7 @@ typedef struct
     fixed_t	r_x;
     fixed_t	r_y;
     boolean	moved;
+
 } vertex_t;
 
 
@@ -88,12 +89,13 @@ struct line_s;
 //  moving objects (doppler), because
 //  position is prolly just buffered, not
 //  updated.
-typedef struct
+typedef struct degenmobj_t
 {
     thinker_t		thinker;	// not used for anything
     fixed_t		x;
     fixed_t		y;
     fixed_t		z;
+
 
 } degenmobj_t;
 
@@ -171,25 +173,26 @@ typedef	struct
 // The SideDef.
 //
 
-typedef struct
+typedef struct side_t
 {
     // add this to the calculated texture column
     fixed_t	textureoffset;
-    
+
     // add this to the calculated texture top
     fixed_t	rowoffset;
 
     // Texture indices.
-    // We do not maintain names here. 
+    // We do not maintain names here.
     short	toptexture;
     short	bottomtexture;
     short	midtexture;
 
     // Sector the SideDef is facing.
     sector_t*	sector;
-    
+
     // [crispy] smooth texture scrolling
     fixed_t	basetextureoffset;
+
 } side_t;
 
 
@@ -197,12 +200,13 @@ typedef struct
 //
 // Move clipping aid for LineDefs.
 //
-typedef enum
+typedef enum slopetype_t
 {
     ST_HORIZONTAL,
     ST_VERTICAL,
     ST_POSITIVE,
     ST_NEGATIVE
+
 
 } slopetype_t;
 
@@ -272,11 +276,11 @@ typedef struct subsector_s
 //
 // The LineSeg.
 //
-typedef struct
+typedef struct seg_t
 {
     vertex_t*	v1;
     vertex_t*	v2;
-    
+
     fixed_t	offset;
 
     angle_t	angle;
@@ -289,10 +293,11 @@ typedef struct
     // backsector is NULL for one sided lines
     sector_t*	frontsector;
     sector_t*	backsector;
-    
+
     uint32_t	length; // [crispy] fix long wall wobble
     angle_t	r_angle; // [crispy] re-calculated angle used for rendering
     int	fakecontrast;
+
 } seg_t;
 
 
@@ -300,7 +305,7 @@ typedef struct
 //
 // BSP node.
 //
-typedef struct
+typedef struct node_t
 {
     // Partition line.
     fixed_t	x;
@@ -313,7 +318,8 @@ typedef struct
 
     // If NF_SUBSECTOR its a subsector.
     int children[2]; // [crispy] extended nodes
-    
+
+
 } node_t;
 
 
@@ -436,7 +442,7 @@ typedef struct vissprite_s
 // Some sprites will only have one picture used
 // for all views: NNNNF0
 //
-typedef struct
+typedef struct spriteframe_t
 {
     // If false use 0 for any position.
     // Note: as eight entries are available,
@@ -448,7 +454,8 @@ typedef struct
 
     // Flip bit (1 = flip) to use for view angles 0-7.
     byte	flip[16]; // [crispy] support 16 sprite rotations
-    
+
+
 } spriteframe_t;
 
 
@@ -457,10 +464,11 @@ typedef struct
 // A sprite definition:
 //  a number of animation frames.
 //
-typedef struct
+typedef struct spritedef_t
 {
     int			numframes;
     spriteframe_t*	spriteframes;
+
 
 } spritedef_t;
 
@@ -469,16 +477,16 @@ typedef struct
 //
 // Now what is a visplane, anyway?
 // 
-typedef struct
+typedef struct visplane_t
 {
   fixed_t		height;
   int			picnum;
   int			lightlevel;
   int			minx;
   int			maxx;
-  
+
   // leave pads for [minx-1]/[maxx+1]
-  
+
   unsigned int		pad1; // [crispy] hires / 32-bit integer math
   // Here lies the rub for all
   //  dynamic resize/change of resolution.
@@ -489,13 +497,15 @@ typedef struct
   unsigned int		bottom[MAXWIDTH]; // [crispy] hires / 32-bit integer math
   unsigned int		pad4; // [crispy] hires / 32-bit integer math
 
+
 } visplane_t;
 
-typedef struct
+typedef struct laserpatch_t
 {
 	char c;
 	char a[9];
 	int l, w, h;
+
 } laserpatch_t;
 extern laserpatch_t *laserpatch;
 

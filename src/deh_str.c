@@ -26,10 +26,11 @@
 
 #include "z_zone.h"
 
-typedef struct 
+typedef struct deh_substitution_t
 {
     char *from_text;
     char *to_text;
+
 } deh_substitution_t;
 
 static deh_substitution_t **hash_table = NULL;
@@ -212,7 +213,7 @@ void DEH_AddStringReplacement(const char *from_text, const char *to_text)
     }
 }
 
-typedef enum
+typedef enum format_arg_t
 {
     FORMAT_ARG_INVALID,
     FORMAT_ARG_INT,
@@ -221,6 +222,7 @@ typedef enum
     FORMAT_ARG_STRING,
     FORMAT_ARG_PTR,
     FORMAT_ARG_SAVE_POS
+
 } format_arg_t;
 
 // Get the type of a format argument.

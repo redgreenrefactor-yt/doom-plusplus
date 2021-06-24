@@ -71,7 +71,7 @@ struct sfxinfo_struct
 //
 // MusicInfo struct.
 //
-typedef struct
+typedef struct musicinfo_t
 {
     // up to 6-character name
     const char *name;
@@ -85,9 +85,10 @@ typedef struct
     // music handle once registered
     void *handle;
 
+
 } musicinfo_t;
 
-typedef enum 
+typedef enum snddevice_t
 {
     SNDDEVICE_NONE = 0,
     SNDDEVICE_PCSPEAKER = 1,
@@ -100,11 +101,12 @@ typedef enum
     SNDDEVICE_GENMIDI = 8,
     SNDDEVICE_AWE32 = 9,
     SNDDEVICE_CD = 10,
+
 } snddevice_t;
 
 // Interface for sound modules
 
-typedef struct
+typedef struct sound_module_t
 {
     // List of sound devices that this sound module is used for.
 
@@ -149,6 +151,7 @@ typedef struct
 
     void (*CacheSounds)(sfxinfo_t *sounds, int num_sounds);
 
+
 } sound_module_t;
 
 void I_InitSound(boolean use_sfx_prefix);
@@ -163,7 +166,7 @@ void I_PrecacheSounds(sfxinfo_t *sounds, int num_sounds);
 
 // Interface for music modules
 
-typedef struct
+typedef struct music_module_t
 {
     // List of sound devices that this music module is used for.
 
@@ -214,6 +217,7 @@ typedef struct
     // Invoked periodically to poll.
 
     void (*Poll)(void);
+
 } music_module_t;
 
 void I_InitMusic(void);

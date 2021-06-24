@@ -31,12 +31,13 @@
 #define IWAD_MASK_HEXEN   (1 << hexen)
 #define IWAD_MASK_STRIFE  (1 << strife)
 
-typedef struct
+typedef struct iwad_t
 {
     const char *name;
     GameMission_t mission;
     GameMode_t mode;
     const char *description;
+
 } iwad_t;
 
 boolean D_IsIWADName(const char *name);

@@ -108,19 +108,21 @@
 
 
 
-typedef enum
+typedef enum animenum_t
 {
     ANIM_ALWAYS,
     ANIM_RANDOM,
     ANIM_LEVEL
 
+
 } animenum_t;
 
-typedef struct
+typedef struct point_t
 {
     int		x;
     int		y;
-    
+
+
 } point_t;
 
 
@@ -128,7 +130,7 @@ typedef struct
 // Animation.
 // There is another anim_t used in p_spec.
 //
-typedef struct
+typedef struct anim_t
 {
     animenum_t	type;
 
@@ -149,10 +151,10 @@ typedef struct
     // ALWAYS: n/a,
     // RANDOM: random base period,
     // LEVEL: n/a
-    int		data2; 
+    int		data2;
 
     // actual graphics for frames of animations
-    patch_t*	p[3]; 
+    patch_t*	p[3];
 
     // following must be initialized to zero before use!
 
@@ -164,9 +166,10 @@ typedef struct
 
     // next frame number to animate
     int		ctr;
-    
+
     // used by RANDOM and LEVEL when animating
-    int		state;  
+    int		state;
+
 
 } anim_t;
 

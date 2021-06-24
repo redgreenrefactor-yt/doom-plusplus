@@ -28,7 +28,7 @@
 typedef boolean (*netgame_startup_callback_t)(int ready_players,
                                               int num_players);
 
-typedef struct
+typedef struct loop_interface_t
 {
     // Read events from the event queue, and process them.
 
@@ -46,6 +46,7 @@ typedef struct
     // Run the menu (runs independently of the game).
 
     void (*RunMenu)();
+
 } loop_interface_t;
 
 // Register callback functions for the main loop code to use.

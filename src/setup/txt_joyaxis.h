@@ -17,17 +17,19 @@
 
 typedef struct txt_joystick_axis_s txt_joystick_axis_t;
 
-typedef enum
+typedef enum txt_joystick_axis_direction_t
 {
     JOYSTICK_AXIS_HORIZONTAL,
     JOYSTICK_AXIS_VERTICAL,
+
 } txt_joystick_axis_direction_t;
 
-typedef enum
+typedef enum txt_joystick_axis_stage_t
 {
     CONFIG_CENTER,      // "Center the joystick and press a button..."
     CONFIG_STAGE1,      // "Top or left and press a button..."
     CONFIG_STAGE2,      // [Optional] "Bottom or right and press a button..."
+
 } txt_joystick_axis_stage_t;
 
 // Callback invoked when calibration is completed.

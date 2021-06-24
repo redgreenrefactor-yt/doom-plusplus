@@ -18,11 +18,12 @@
 
 typedef struct _MEMFILE MEMFILE;
 
-typedef enum 
+typedef enum mem_rel_t
 {
 	MEM_SEEK_SET,
 	MEM_SEEK_CUR,
 	MEM_SEEK_END,
+
 } mem_rel_t;
 
 MEMFILE *mem_fopen_read(void *buf, size_t buflen);

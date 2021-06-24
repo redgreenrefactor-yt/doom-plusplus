@@ -41,11 +41,12 @@
 #include "m_misc.h" // [crispy] M_StringDuplicate()
 #include "m_random.h" // [crispy] Crispy_Random()
 
-typedef enum
+typedef enum finalestage_t
 {
     F_STAGE_TEXT,
     F_STAGE_ARTSCREEN,
     F_STAGE_CAST,
+
 } finalestage_t;
 
 // ?
@@ -61,12 +62,13 @@ unsigned int finalecount;
 #define	TEXTSPEED	3
 #define	TEXTWAIT	250
 
-typedef struct
+typedef struct textscreen_t
 {
     GameMission_t mission;
     int episode, level;
     const char *background;
     const char *text;
+
 } textscreen_t;
 
 static textscreen_t textscreens[] =
@@ -361,10 +363,11 @@ void F_TextWrite (void)
 // Casting by id Software.
 //   in order of appearance
 //
-typedef struct
+typedef struct castinfo_t
 {
     const char	*name;
     mobjtype_t	type;
+
 } castinfo_t;
 
 castinfo_t	castorder[] = {
@@ -458,11 +461,12 @@ extern void A_SPosAttack();
 extern void A_TroopAttack();
 extern void A_VileTarget();
 
-typedef struct
+typedef struct actionsound_t
 {
 	void *const action;
 	const int sound;
 	const boolean early;
+
 } actionsound_t;
 
 static const actionsound_t actionsounds[] =

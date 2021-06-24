@@ -50,16 +50,17 @@ typedef struct memblock_s
 } memblock_t;
 
 
-typedef struct
+typedef struct memzone_t
 {
     // total bytes malloced, including header
     int		size;
 
     // start / end cap for linked list
     memblock_t	blocklist;
-    
+
     memblock_t*	rover;
-    
+
+
 } memzone_t;
 
 

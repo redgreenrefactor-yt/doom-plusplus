@@ -451,12 +451,13 @@ void OPL_Unlock(void)
     }
 }
 
-typedef struct
+typedef struct delay_data_t
 {
     int finished;
 
     SDL_mutex *mutex;
     SDL_cond *cond;
+
 } delay_data_t;
 
 static void DelayCallback(void *_delay_data)

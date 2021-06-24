@@ -125,19 +125,20 @@ int EV_DoDonut(line_t* line);
 //
 // P_LIGHTS
 //
-typedef struct
+typedef struct fireflicker_t
 {
     thinker_t	thinker;
     sector_t*	sector;
     int		count;
     int		maxlight;
     int		minlight;
-    
+
+
 } fireflicker_t;
 
 
 
-typedef struct
+typedef struct lightflash_t
 {
     thinker_t	thinker;
     sector_t*	sector;
@@ -146,12 +147,13 @@ typedef struct
     int		minlight;
     int		maxtime;
     int		mintime;
-    
+
+
 } lightflash_t;
 
 
 
-typedef struct
+typedef struct strobe_t
 {
     thinker_t	thinker;
     sector_t*	sector;
@@ -160,19 +162,21 @@ typedef struct
     int		maxlight;
     int		darktime;
     int		brighttime;
-    
+
+
 } strobe_t;
 
 
 
 
-typedef struct
+typedef struct glow_t
 {
     thinker_t	thinker;
     sector_t*	sector;
     int		minlight;
     int		maxlight;
     int		direction;
+
 
 } glow_t;
 
@@ -220,22 +224,24 @@ typedef PACKED_STRUCT (
 }) switchlist_t;
 
 
-typedef enum
+typedef enum bwhere_e
 {
     top,
     middle,
     bottom
 
-} bwhere_e;
+
+}bwhere_e;
 
 
-typedef struct
+typedef struct button_t
 {
     line_t*	line;
     bwhere_e	where;
     int		btexture;
     int		btimer;
     degenmobj_t *soundorg;
+
 
 } button_t;
 
@@ -265,18 +271,19 @@ void P_InitSwitchList(void);
 //
 // P_PLATS
 //
-typedef enum
+typedef enum plat_e
 {
     up,
     down,
     waiting,
     in_stasis
 
-} plat_e;
+
+}plat_e;
 
 
 
-typedef enum
+typedef enum plattype_e
 {
     perpetualRaise,
     downWaitUpStay,
@@ -284,11 +291,12 @@ typedef enum
     raiseToNearestAndChange,
     blazeDWUS
 
-} plattype_e;
+
+}plattype_e;
 
 
 
-typedef struct
+typedef struct plat_t
 {
     thinker_t	thinker;
     sector_t*	sector;
@@ -302,7 +310,8 @@ typedef struct
     boolean	crush;
     int		tag;
     plattype_e	type;
-    
+
+
 } plat_t;
 
 
@@ -331,7 +340,7 @@ void    P_ActivateInStasis(int tag);
 //
 // P_DOORS
 //
-typedef enum
+typedef enum vldoor_e
 {
     vld_normal,
     vld_close30ThenOpen,
@@ -342,11 +351,12 @@ typedef enum
     vld_blazeOpen,
     vld_blazeClose
 
-} vldoor_e;
+
+}vldoor_e;
 
 
 
-typedef struct
+typedef struct vldoor_t
 {
     thinker_t	thinker;
     vldoor_e	type;
@@ -356,13 +366,14 @@ typedef struct
 
     // 1 = up, 0 = waiting at top, -1 = down
     int             direction;
-    
+
     // tics to wait at the top
     int             topwait;
     // (keep in case a door going down is reset)
     // when it reaches 0, start going down
     int             topcountdown;
-    
+
+
 } vldoor_t;
 
 
@@ -400,28 +411,30 @@ P_SpawnDoorRaiseIn5Mins
 //
 //      Sliding doors...
 //
-typedef enum
+typedef enum sd_e
 {
     sd_opening,
     sd_waiting,
     sd_closing
 
-} sd_e;
+
+}sd_e;
 
 
 
-typedef enum
+typedef enum sdt_e
 {
     sdt_openOnly,
     sdt_closeOnly,
     sdt_openAndClose
 
-} sdt_e;
+
+}sdt_e;
 
 
 
 
-typedef struct
+typedef struct slidedoor_t
 {
     thinker_t	thinker;
     sdt_e	type;
@@ -433,11 +446,12 @@ typedef struct
     sector_t*	backsector;
     sd_e	 status;
 
+
 } slidedoor_t;
 
 
 
-typedef struct
+typedef struct slidename_t
 {
     char	frontFrame1[9];
     char	frontFrame2[9];
@@ -447,15 +461,17 @@ typedef struct
     char	backFrame2[9];
     char	backFrame3[9];
     char	backFrame4[9];
-    
+
+
 } slidename_t;
 
 
 
-typedef struct
+typedef struct slideframe_t
 {
     int             frontFrames[4];
     int             backFrames[4];
+
 
 } slideframe_t;
 
@@ -483,7 +499,7 @@ EV_SlidingDoor
 //
 // P_CEILNG
 //
-typedef enum
+typedef enum ceiling_e
 {
     lowerToFloor,
     raiseToHighest,
@@ -492,11 +508,12 @@ typedef enum
     fastCrushAndRaise,
     silentCrushAndRaise
 
-} ceiling_e;
+
+}ceiling_e;
 
 
 
-typedef struct
+typedef struct ceiling_t
 {
     thinker_t	thinker;
     ceiling_e	type;
@@ -510,9 +527,10 @@ typedef struct
     int		direction;
 
     // ID
-    int		tag;                   
+    int		tag;
     int		olddirection;
-    
+
+
 } ceiling_t;
 
 
@@ -540,54 +558,56 @@ void    P_ActivateInStasisCeiling(line_t* line);
 //
 // P_FLOOR
 //
-typedef enum
+typedef enum floor_e
 {
     // lower floor to highest surrounding floor
     lowerFloor,
-    
+
     // lower floor to lowest surrounding floor
     lowerFloorToLowest,
-    
+
     // lower floor to highest surrounding floor VERY FAST
     turboLower,
-    
+
     // raise floor to lowest surrounding CEILING
     raiseFloor,
-    
+
     // raise floor to next highest surrounding floor
     raiseFloorToNearest,
 
     // raise floor to shortest height texture around it
     raiseToTexture,
-    
+
     // lower floor to lowest surrounding floor
     //  and change floorpic
     lowerAndChange,
-  
+
     raiseFloor24,
     raiseFloor24AndChange,
     raiseFloorCrush,
 
      // raise to next highest floor, turbo-speed
-    raiseFloorTurbo,       
+    raiseFloorTurbo,
     donutRaise,
     raiseFloor512
-    
-} floor_e;
+
+
+}floor_e;
 
 
 
 
-typedef enum
+typedef enum stair_e
 {
     build8,	// slowly build by 8
     turbo16	// quickly build by 16
-    
-} stair_e;
+
+
+}stair_e;
 
 
 
-typedef struct
+typedef struct floormove_t
 {
     thinker_t	thinker;
     floor_e	type;
@@ -599,19 +619,21 @@ typedef struct
     fixed_t	floordestheight;
     fixed_t	speed;
 
+
 } floormove_t;
 
 
 
 #define FLOORSPEED		FRACUNIT
 
-typedef enum
+typedef enum result_e
 {
     ok,
     crushed,
     pastdest
-    
-} result_e;
+
+
+}result_e;
 
 result_e
 T_MovePlane

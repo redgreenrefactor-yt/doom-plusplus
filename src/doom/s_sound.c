@@ -63,7 +63,7 @@ static int stereo_swing;
 #define NORM_PRIORITY 64
 #define NORM_SEP 128
 
-typedef struct
+typedef struct channel_t
 {
     // sound information (if null, channel avail.)
     sfxinfo_t *sfxinfo;
@@ -75,6 +75,7 @@ typedef struct
     int handle;
 
     int pitch;
+
 
 } channel_t;
 

@@ -25,7 +25,7 @@
 
 
 // Weapon info: sprite frames, ammunition use.
-typedef struct
+typedef struct weaponinfo_t
 {
     ammotype_t	ammo;
     int		upstate;
@@ -33,6 +33,7 @@ typedef struct
     int		readystate;
     int		atkstate;
     int		flashstate;
+
 
 } weaponinfo_t;
 

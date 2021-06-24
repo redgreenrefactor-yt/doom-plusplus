@@ -41,7 +41,7 @@
 
 
 
-typedef enum
+typedef enum dirtype_t
 {
     DI_EAST,
     DI_NORTHEAST,
@@ -53,7 +53,8 @@ typedef enum
     DI_SOUTHEAST,
     DI_NODIR,
     NUMDIRS
-    
+
+
 } dirtype_t;
 
 

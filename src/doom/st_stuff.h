@@ -61,21 +61,23 @@ extern void ST_refreshBackground(boolean force);
 
 
 // States for status bar code.
-typedef enum
+typedef enum st_stateenum_t
 {
     AutomapState,
     FirstPersonState
-    
+
+
 } st_stateenum_t;
 
 
 // States for the chat code.
-typedef enum
+typedef enum st_chatstateenum_t
 {
     StartChatState,
     WaitDestState,
     GetChatState
-    
+
+
 } st_chatstateenum_t;
 
 

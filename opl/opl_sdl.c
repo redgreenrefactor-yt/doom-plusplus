@@ -35,12 +35,13 @@
 
 #define MAX_SOUND_SLICE_TIME 100 /* ms */
 
-typedef struct
+typedef struct opl_timer_t
 {
     unsigned int rate;        // Number of times the timer is advanced per sec.
     unsigned int enabled;     // Non-zero if timer is enabled.
     unsigned int value;       // Last value that was set.
     uint64_t expire_time;     // Calculated time that timer will expire.
+
 } opl_timer_t;
 
 // When the callback mutex is locked using OPL_Lock, callback functions

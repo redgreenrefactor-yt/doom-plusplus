@@ -21,13 +21,14 @@
 
 #include "textscreen.h"
 
-typedef enum
+typedef enum operator_t
 {
     OP_NONE,
     OP_PLUS,
     OP_MINUS,
     OP_MULT,
     OP_DIV,
+
 } operator_t;
 
 int starting_input = 0;

@@ -45,14 +45,15 @@
 //
 // Player states.
 //
-typedef enum
+typedef enum playerstate_t
 {
     // Playing or camping.
     PST_LIVE,
     // Dead on the ground, view follows killer.
     PST_DEAD,
     // Ready to restart/respawn???
-    PST_REBORN		
+    PST_REBORN
+
 
 } playerstate_t;
 
@@ -60,7 +61,7 @@ typedef enum
 //
 // Player internal flags, for cheats and debug.
 //
-typedef enum
+typedef enum cheat_t
 {
     // No clipping, walk through barriers.
     CF_NOCLIP		= 1,
@@ -70,6 +71,7 @@ typedef enum
     CF_NOMOMENTUM	= 4,
     // [crispy] monsters don't target
     CF_NOTARGET         = 8
+
 
 } cheat_t;
 
@@ -205,31 +207,32 @@ typedef struct player_s
 // INTERMISSION
 // Structure passed e.g. to WI_Start(wb)
 //
-typedef struct
+typedef struct wbplayerstruct_t
 {
     boolean	in;	// whether the player is in game
-    
+
     // Player stats, kills, collected items etc.
     int		skills;
     int		sitems;
     int		ssecret;
-    int		stime; 
+    int		stime;
     int		frags[4];
     int		score;	// current score on entry, modified on return
-  
+
+
 } wbplayerstruct_t;
 
-typedef struct
+typedef struct wbstartstruct_t
 {
     int		epsd;	// episode # (0-2)
 
     // if true, splash the secret level
     boolean	didsecret;
-    
+
     // previous and next levels, origin 0
     int		last;
-    int		next;	
-    
+    int		next;
+
     int		maxkills;
     int		maxitems;
     int		maxsecret;
@@ -237,14 +240,15 @@ typedef struct
 
     // the par time
     int		partime;
-    
+
     // index of this player in game
-    int		pnum;	
+    int		pnum;
 
     wbplayerstruct_t	plyr[MAXPLAYERS];
 
     // [crispy] CPhipps - total game time for completed levels so far
     int		totaltimes;
+
 } wbstartstruct_t;
 
 

@@ -108,7 +108,7 @@
 //
 // Misc. mobj flags
 //
-typedef enum
+typedef enum mobjflag_t
 {
     // Call P_SpecialThing when touched.
     MF_SPECIAL		= 1,
@@ -119,7 +119,7 @@ typedef enum
     // Don't use the sector links (invisible but touchable).
     MF_NOSECTOR		= 8,
     // Don't use the blocklinks (inert but displayable)
-    MF_NOBLOCKMAP	= 16,                    
+    MF_NOBLOCKMAP	= 16,
 
     // Not to be activated by sound, deaf monster.
     MF_AMBUSH		= 32,
@@ -152,7 +152,7 @@ typedef enum
     MF_TELEPORT		= 0x8000,
     // Don't hit same species, explode on block.
     // Player missiles as well as fireballs of various kinds.
-    MF_MISSILE		= 0x10000,	
+    MF_MISSILE		= 0x10000,
     // Dropped by a demon, not level spawned.
     // E.g. ammo clips dropped by dying former humans.
     MF_DROPPED		= 0x20000,
@@ -173,7 +173,7 @@ typedef enum
     //  towards intermission kill total.
     // Happy gathering.
     MF_COUNTKILL	= 0x400000,
-    
+
     // On picking up, count this item object
     //  towards intermission item total.
     MF_COUNTITEM	= 0x800000,
@@ -199,6 +199,7 @@ typedef enum
 
     // [crispy] translucent sprite
     MF_TRANSLUCENT      = 0x80000000
+
 
 } mobjflag_t;
 

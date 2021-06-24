@@ -33,19 +33,20 @@
 
 // Text Line widget
 //  (parent of Scrolling Text and Input Text widgets)
-typedef struct
+typedef struct hu_textline_t
 {
     // left-justified position of scrolling text window
     int		x;
     int		y;
-    
+
     patch_t**	f;			// font
     int		sc;			// start character
     char	l[HU_MAXLINELENGTH+1];	// line of text
     int		len;		      	// current line length
 
     // whether this line needs to be udpated
-    int		needsupdate;	      
+    int		needsupdate;
+
 
 } hu_textline_t;
 
@@ -53,7 +54,7 @@ typedef struct
 
 // Scrolling Text window widget
 //  (child of Text Line widget)
-typedef struct
+typedef struct hu_stext_t
 {
     hu_textline_t	l[HU_MAXLINES];	// text lines to draw
     int			h;		// height in lines
@@ -63,13 +64,14 @@ typedef struct
     boolean*		on;
     boolean		laston;		// last value of *->on.
 
+
 } hu_stext_t;
 
 
 
 // Input Text Line widget
 //  (child of Text Line widget)
-typedef struct
+typedef struct hu_itext_t
 {
     hu_textline_t	l;		// text line to input on
 
@@ -77,8 +79,9 @@ typedef struct
     int			lm;
 
     // pointer to boolean stating whether to update window
-    boolean*		on; 
+    boolean*		on;
     boolean		laston; // last value of *->on;
+
 
 } hu_itext_t;
 

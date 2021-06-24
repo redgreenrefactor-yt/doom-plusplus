@@ -36,11 +36,12 @@
 #define INVALID_SET_FILE_POINTER 0xffffffff
 #endif
 
-typedef struct
+typedef struct win32_wad_file_t
 {
     wad_file_t wad;
     HANDLE handle;
     HANDLE handle_map;
+
 } win32_wad_file_t;
 
 extern wad_file_class_t win32_wad_file;

@@ -45,7 +45,7 @@
 // How often to re-resolve the address of the master server?
 #define MASTER_RESOLVE_PERIOD 8 * 60 * 60 /* 8 hours */
 
-typedef enum
+typedef enum net_server_state_t
 {
     // waiting for the game to be "launched" (key player to press the start
     // button)
@@ -60,9 +60,10 @@ typedef enum
     // in a game
 
     SERVER_IN_GAME,
+
 } net_server_state_t;
 
-typedef struct
+typedef struct net_client_t
 {
     boolean active;
     int player_number;
@@ -120,11 +121,12 @@ typedef struct
 
     int player_class;
 
+
 } net_client_t;
 
 // structure used for the recv window
 
-typedef struct 
+typedef struct net_client_recv_t
 {
     // Whether this tic has been received yet
 
@@ -141,6 +143,7 @@ typedef struct
     // Tic data itself
 
     net_ticdiff_t diff;
+
 } net_client_recv_t;
 
 static net_server_state_t server_state;

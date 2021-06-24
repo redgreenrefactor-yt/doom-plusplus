@@ -55,14 +55,15 @@
 // Animating textures and planes
 // There is another anim_t used in wi_stuff, unrelated.
 //
-typedef struct
+typedef struct anim_t
 {
     boolean	istexture;
     int		picnum;
     int		basepic;
     int		numpics;
     int		speed;
-    
+
+
 } anim_t;
 
 //

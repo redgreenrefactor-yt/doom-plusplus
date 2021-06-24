@@ -25,18 +25,20 @@ typedef void (*opl_callback_t)(void *data);
 
 // Result from OPL_Init(), indicating what type of OPL chip was detected,
 // if any.
-typedef enum
+typedef enum opl_init_result_t
 {
     OPL_INIT_NONE,
     OPL_INIT_OPL2,
     OPL_INIT_OPL3,
+
 } opl_init_result_t;
 
-typedef enum
+typedef enum opl_port_t
 {
     OPL_REGISTER_PORT = 0,
     OPL_DATA_PORT = 1,
     OPL_REGISTER_PORT_OPL3 = 2
+
 } opl_port_t;
 
 #define OPL_NUM_OPERATORS   21

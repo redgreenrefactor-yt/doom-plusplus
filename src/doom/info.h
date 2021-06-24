@@ -24,7 +24,7 @@
 // Needed for action function pointer handling.
 #include "d_think.h"
 
-typedef enum
+typedef enum spritenum_t
 {
     SPR_TROO,
     SPR_SHTG,
@@ -186,9 +186,10 @@ typedef enum
     SPR_SP90, SPR_SP91, SPR_SP92, SPR_SP93, SPR_SP94, SPR_SP95, SPR_SP96, SPR_SP97, SPR_SP98, SPR_SP99,
     NUMSPRITES
 
+
 } spritenum_t;
 
-typedef enum
+typedef enum statenum_t
 {
     S_NULL,
     S_LIGHTDONE,
@@ -1230,10 +1231,11 @@ typedef enum
     // [BH] extra dehacked states
     EXTRASTATES = 1089,
     NUMSTATES = 4000
+
 } statenum_t;
 
 
-typedef struct
+typedef struct state_t
 {
     spritenum_t sprite;
     int frame;
@@ -1243,6 +1245,7 @@ typedef struct
     statenum_t nextstate;
     int misc1;
     int misc2;
+
 } state_t;
 
 extern state_t	states[NUMSTATES];
@@ -1422,7 +1425,7 @@ typedef enum {
 
 } mobjtype_t;
 
-typedef struct
+typedef struct mobjinfo_t
 {
     int	doomednum;
     int	spawnstate;
@@ -1459,6 +1462,7 @@ typedef struct
     int minmissilechance;
     // [crispy] multiplier for likelihood of a missile attack (generaliz. for various)
     int missilechancemult;
+
 
 } mobjinfo_t;
 

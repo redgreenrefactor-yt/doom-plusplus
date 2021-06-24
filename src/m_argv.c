@@ -309,10 +309,11 @@ static int GuessFileType(const char *name)
     return ret;
 }
 
-typedef struct
+typedef struct argument_t
 {
     char *str;
     int type, stable;
+
 } argument_t;
 
 static int CompareByFileType(const void *a, const void *b)

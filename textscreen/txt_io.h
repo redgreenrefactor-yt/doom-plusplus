@@ -20,10 +20,11 @@
 
 #include "txt_main.h"
 
-typedef struct
+typedef struct txt_saved_colors_t
 {
     int bgcolor;
     int fgcolor;
+
 } txt_saved_colors_t;
 
 void TXT_PutSymbol(int c);

@@ -48,14 +48,15 @@
 
 
 
-typedef struct
+typedef struct maskdraw_t
 {
     int		x1;
     int		x2;
-	
+
     int		column;
     int		topclip;
     int		bottomclip;
+
 
 } maskdraw_t;
 

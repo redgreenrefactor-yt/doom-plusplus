@@ -29,7 +29,7 @@
 // Mainly movements/button commands per game tick,
 // plus a checksum for internal state consistency.
 
-typedef struct
+typedef struct ticcmd_t
 {
     signed char	forwardmove;	// *2048 for move
     signed char	sidemove;	// *2048 for move
@@ -44,13 +44,14 @@ typedef struct
 
     byte buttons2;
     int inventory;
-   
+
     // Heretic/Hexen specific:
 
     byte lookfly;               // look/fly up/down/centering
     byte arti;                  // artitype_t to use
 
     int lookdir;
+
 } ticcmd_t;
 
 

@@ -31,10 +31,11 @@
 
 typedef struct txt_spincontrol_s txt_spincontrol_t;
 
-typedef enum
+typedef enum txt_spincontrol_type_t
 {
     TXT_SPINCONTROL_INT,
     TXT_SPINCONTROL_FLOAT,
+
 } txt_spincontrol_type_t;
 
 #include "txt_widget.h"

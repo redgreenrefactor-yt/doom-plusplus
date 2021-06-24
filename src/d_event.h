@@ -29,7 +29,7 @@
 //
 
 // Input event types.
-typedef enum
+typedef enum evtype_t
 {
     // Key press/release events.
     //    data1: Key code (from doomkeys.h) of the key that was
@@ -65,22 +65,24 @@ typedef enum
     // Quit event. Triggered when the user clicks the "close" button
     // to terminate the application.
     ev_quit
+
 } evtype_t;
 
 // Event structure.
-typedef struct
+typedef struct event_t
 {
     evtype_t type;
 
     // Event-specific data; see the descriptions given above.
     int data1, data2, data3, data4, data5;
+
 } event_t;
 
  
 //
 // Button/action code definitions.
 //
-typedef enum
+typedef enum buttoncode_t
 {
     // Press "Fire".
     BT_ATTACK		= 1,
@@ -90,7 +92,7 @@ typedef enum
     // Flag: game events, not really buttons.
     BT_SPECIAL		= 128,
     BT_SPECIALMASK	= 3,
-    
+
     // Flag, weapon change pending.
     // If true, the next 3 bits hold weapon num.
     BT_CHANGE		= 4,
@@ -104,17 +106,18 @@ typedef enum
     BTS_SAVEGAME	= 2,
 
     // Savegame slot numbers
-    //  occupy the second byte of buttons.    
+    //  occupy the second byte of buttons.
     BTS_SAVEMASK	= (4+8+16),
     BTS_SAVESHIFT 	= 2,
-  
+
     // [crispy] demo joined.
     BT_JOIN = 64
+
 } buttoncode_t;
 
 // villsa [STRIFE] Strife specific buttons
 // TODO - not finished
-typedef enum
+typedef enum buttoncode2_t
 {
     // Player view look up
     BT2_LOOKUP          = 1,
@@ -130,7 +133,8 @@ typedef enum
     BT2_JUMP            = 32,
     // Use medkit
     BT2_HEALTH          = 128,
-  
+
+
 } buttoncode2_t;
 
 

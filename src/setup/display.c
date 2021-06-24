@@ -32,9 +32,10 @@
 
 extern void RestartTextscreen(void);
 
-typedef struct
+typedef struct window_size_t
 {
     int w, h;
+
 } window_size_t;
 
 // List of aspect ratio-uncorrected window sizes:
