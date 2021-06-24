@@ -60,7 +60,7 @@ txt_window_t *TXT_NewWindow(const char *title)
 
     txt_window_t *win;
 
-    win = malloc(sizeof(txt_window_t));
+    win = reinterpret_cast<txt_window_t*>(malloc(sizeof(txt_window_t)));
 
     TXT_InitTable(&win->table, 1);
 
@@ -536,7 +536,7 @@ void TXT_OpenURL(const char *url)
     int retval;
 
     cmd_len = strlen(url) + 30;
-    cmd = malloc(cmd_len);
+    cmd = reinterpret_cast<char*>(malloc(cmd_len));
 
 #if defined(__MACOSX__)
     TXT_snprintf(cmd, cmd_len, "open \"%s\"", url);

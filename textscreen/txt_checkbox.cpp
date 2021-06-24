@@ -120,7 +120,7 @@ txt_checkbox_t *TXT_NewCheckBox(const char *label, int *variable)
 {
     txt_checkbox_t *checkbox;
 
-    checkbox = malloc(sizeof(txt_checkbox_t));
+    checkbox = reinterpret_cast<txt_checkbox_t*>(malloc(sizeof(txt_checkbox_t)));
 
     TXT_InitWidget(checkbox, &txt_checkbox_class);
     checkbox->label = strdup(label);

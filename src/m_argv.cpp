@@ -103,7 +103,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
     // at the end of the response file, in which case a '\0' will be
     // needed.
 
-    file = malloc(size + 1);
+    file = reinterpret_cast<char*>(malloc(size + 1));
 
     i = 0;
 
@@ -123,7 +123,7 @@ static void LoadResponseFile(int argv_index, const char *filename)
 
     // Create new arguments list array
 
-    newargv = malloc(sizeof(char *) * MAXARGVS);
+    newargv = reinterpret_cast<char**>(malloc(sizeof(char *) * MAXARGVS));
     newargc = 0;
     memset(newargv, 0, sizeof(char *) * MAXARGVS);
 
@@ -339,7 +339,7 @@ void M_AddLooseFiles(void)
 
     // allocate space for up to three additional regular parameters
 
-    arguments = malloc((myargc + 3) * sizeof(*arguments));
+    arguments = reinterpret_cast<*>(malloc((myargc + 3) * sizeof(*arguments)));
     memset(arguments, 0, (myargc + 3) * sizeof(*arguments));
 
     // check the command line and make sure it does not already
@@ -391,7 +391,7 @@ void M_AddLooseFiles(void)
         myargc++;
     }
 
-    newargv = malloc(myargc * sizeof(*newargv));
+    newargv = reinterpret_cast<*>(malloc(myargc * sizeof(*newargv)));
 
     // sort the argument list by file type, except for the zeroth argument
     // which is the executable invocation itself

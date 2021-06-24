@@ -27,7 +27,7 @@
 
 void P_CreateBlockMap(void)
 {
-  register int i;
+  int i;
   fixed_t minx = INT_MAX, miny = INT_MAX, maxx = INT_MIN, maxy = INT_MIN;
 
   // First find limits of map
@@ -79,7 +79,7 @@ void P_CreateBlockMap(void)
   {
     typedef struct { int n, nalloc, *list; } bmap_t;  // blocklist structure
     unsigned tot = bmapwidth * bmapheight;            // size of blockmap
-    bmap_t *bmap = calloc(sizeof *bmap, tot);         // array of blocklists
+    bmap_t *bmap = reinterpret_cast<bmap_t *>(calloc(sizeof *bmap, tot));         // array of blocklists
     int x, y, adx, ady, bend;
 
     for (i=0; i < numlines; i++)
@@ -120,9 +120,9 @@ void P_CreateBlockMap(void)
 	  {
 	    // Increase size of allocated list if necessary
 	    if (bmap[b].n >= bmap[b].nalloc)
-	      bmap[b].list = I_Realloc(bmap[b].list,
+	      bmap[b].list = reinterpret_cast<int*>(I_Realloc(bmap[b].list,
 				     (bmap[b].nalloc = bmap[b].nalloc ?
-				      bmap[b].nalloc*2 : 8)*sizeof*bmap->list);
+				      bmap[b].nalloc*2 : 8)*sizeof*bmap->list));
 
 	    // Add linedef to end of list
 	    bmap[b].list[bmap[b].n++] = i;
@@ -154,7 +154,7 @@ void P_CreateBlockMap(void)
 	  count += bmap[i].n + 2; // 1 header word + 1 trailer word + blocklist
 
       // Allocate blockmap lump with computed count
-      blockmaplump = Z_Malloc(sizeof(*blockmaplump) * count, PU_LEVEL, 0);
+      blockmaplump = reinterpret_cast<int32_t *>(Z_Malloc(sizeof(*blockmaplump) * count, PU_LEVEL, 0));
     }
 
     // Now compress the blockmap.
@@ -185,7 +185,7 @@ void P_CreateBlockMap(void)
   // [crispy] copied over from P_LoadBlockMap()
   {
     int count = sizeof(*blocklinks) * bmapwidth * bmapheight;
-    blocklinks = Z_Malloc(count, PU_LEVEL, 0);
+    blocklinks = reinterpret_cast<mobj_t**>(Z_Malloc(count, PU_LEVEL, 0));
     memset(blocklinks, 0, count);
     blockmap = blockmaplump+4;
   }

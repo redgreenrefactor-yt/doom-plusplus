@@ -490,7 +490,7 @@ void ST_refreshBackground(boolean force)
 		pixel_t *dest;
 		const char *name = (gamemode == commercial) ? DEH_String("GRNROCK") : DEH_String("FLOOR7_2");
 
-		src = W_CacheLumpName(name, PU_CACHE);
+		src = reinterpret_cast<byte*>(W_CacheLumpName(name, PU_CACHE));
 		dest = st_backing_screen;
 
 		for (y = SCREENHEIGHT-(ST_HEIGHT<<crispy->hires); y < SCREENHEIGHT; y++)
@@ -508,7 +508,7 @@ void ST_refreshBackground(boolean force)
 		// [crispy] preserve bezel bottom edge
 		if (scaledviewwidth == SCREENWIDTH)
 		{
-			patch_t *const patch = W_CacheLumpName(DEH_String("brdr_b"), PU_CACHE);
+			patch_t *const patch = reinterpret_cast<patch_t *>(W_CacheLumpName(DEH_String("brdr_b"), PU_CACHE));
 
 			for (x = 0; x < WIDESCREENDELTA; x += 8)
 			{
@@ -1126,7 +1126,7 @@ ST_Responder (event_t* ev)
 		extern boolean P_GiveWeapon (player_t* player, weapontype_t weapon, boolean dropped);
 		extern const char *const WeaponPickupMessages[NUMWEAPONS];
 
-		P_GiveWeapon(plyr, w, false);
+		P_GiveWeapon(plyr, static_cast<weapontype_t >(w), false);
 		S_StartSound(NULL, sfx_wpnup);
 
 		if (w > 1)
@@ -1621,7 +1621,7 @@ void ST_updateWidgets(void)
 			st_firsttime = true;
 		}
 #endif
-		plyr->tryopen[i]--;
+		plyr->tryopen[i] = plyr->tryopen[i] - 1;
 #if !defined(CRISPY_KEYBLINK_IN_CLASSIC_HUD)
 		if (st_crispyhud)
 #endif
@@ -1879,7 +1879,7 @@ static inline void ST_DrawGibbedPlayerSprites (void)
 	}
 
 	sprframe = &sprdef->spriteframes[state->frame & FF_FRAMEMASK];
-	patch = W_CacheLumpNum(sprframe->lump[0] + firstspritelump, PU_CACHE);
+	patch = reinterpret_cast<patch_t *>(W_CacheLumpNum(sprframe->lump[0] + firstspritelump, PU_CACHE));
 
 	if (plyr->mo->flags & MF_TRANSLATION)
 	{
@@ -1925,7 +1925,7 @@ void ST_drawWidgets(boolean refresh)
 			}
 		}
 
-		patch = W_CacheLumpNum(lump, PU_CACHE);
+		patch = reinterpret_cast<patch_t *>(W_CacheLumpNum(lump, PU_CACHE));
 
 		// [crispy] (23,179) is the center of the Ammo widget
 		V_DrawPatch(ST_AMMOX - 21 - SHORT(patch->width)/2 + SHORT(patch->leftoffset),
@@ -2143,7 +2143,7 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
 
 static void ST_loadCallback(const char *lumpname, patch_t **variable)
 {
-    *variable = W_CacheLumpName(lumpname, PU_STATIC);
+    *variable = reinterpret_cast<patch_t *>(W_CacheLumpName(lumpname, PU_STATIC));
 }
 
 void ST_loadGraphics(void)
@@ -2168,7 +2168,7 @@ void ST_loadData(void)
 	DEH_snprintf(lumpname, 9, "STKEYS%d", i);
 	lumpnum = W_CheckNumForName(lumpname);
 
-	keys[i] = (lumpnum != -1) ? W_CacheLumpNum(lumpnum, PU_STATIC) : keys[i-3];
+	keys[i] = (lumpnum != -1) ? reinterpret_cast<patch_t *>(W_CacheLumpNum(lumpnum, PU_STATIC)) : keys[i-3];
     }
 }
 
@@ -2408,7 +2408,7 @@ void ST_Start (void)
 	char namebuf[8];
 
 	DEH_snprintf(namebuf, 7, "STFB%d", consoleplayer);
-	faceback = W_CacheLumpName(namebuf, PU_STATIC);
+	faceback = reinterpret_cast<patch_t*>(W_CacheLumpName(namebuf, PU_STATIC));
     }
 }
 
@@ -2418,7 +2418,7 @@ void ST_Stop (void)
 	return;
 
 #ifndef CRISPY_TRUECOLOR
-    I_SetPalette (W_CacheLumpNum (lu_palette, PU_CACHE));
+    I_SetPalette (reinterpret_cast<byte*>(W_CacheLumpNum (lu_palette, PU_CACHE)));
 #else
     I_SetPalette (0);
 #endif

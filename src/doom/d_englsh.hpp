@@ -33,32 +33,31 @@
 //
 //	M_Menu.C
 //
-#define PRESSKEY 	"press a key."
-#define PRESSYN 	"press y or n."
-#define QUITMSG	"are you sure you want to\nquit this great game?"
-#define LOADNET 	"you can't do load while in a net game!\n\n"PRESSKEY
-#define QLOADNET	"you can't quickload during a netgame!\n\n"PRESSKEY
-#define QSAVESPOT	"you haven't picked a quicksave slot yet!\n\n"PRESSKEY
-#define SAVEDEAD 	"you can't save if you aren't playing!\n\n"PRESSKEY
-#define QSPROMPT 	"quicksave over your game named\n\n'%s'?\n\n"PRESSYN
-#define QLPROMPT	"do you want to quickload the game named\n\n'%s'?\n\n"PRESSYN
+
+const char* QUITMSG     = "are you sure you want to\nquit this great game?";
+const char* LOADNET     = "you can't do load while in a net game!\n\npress a key.";
+const char* QLOADNET    = "you can't quickload during a netgame!\n\npress a key.";
+const char* QSAVESPOT   = "you haven't picked a quicksave slot yet!\n\npress a key.";
+const char* SAVEDEAD    = "you can't save if you aren't playing!\n\npress a key.";
+const char* QSPROMPT    = "quicksave over your game named\n\n'%s'?\n\npress y or n.";
+const char* QLPROMPT    = "do you want to quickload the game named\n\n'%s'?\n\npress y or n.";
 
 #define NEWGAME	\
 "you can't start a new game\n"\
-"while in a network game.\n\n"PRESSKEY
+"while in a network game.\n\n"
 
 #define NIGHTMARE	\
 "are you sure? this skill level\n"\
-"isn't even remotely fair.\n\n"PRESSYN
+"isn't even remotely fair.\n\npress y or n."
 
 #define SWSTRING	\
 "this is the shareware version of doom.\n\n"\
-"you need to order the entire trilogy.\n\n"PRESSKEY
+"you need to order the entire trilogy.\n\npress a key."
 
 #define MSGOFF	"Messages OFF"
 #define MSGON		"Messages ON"
-#define NETEND	"you can't end a netgame!\n\n"PRESSKEY
-#define ENDGAME	"are you sure you want to end the game?\n\n"PRESSYN
+#define NETEND	"you can't end a netgame!\n\npress a key."
+#define ENDGAME	"are you sure you want to end the game?\n\npress y or n."
 
 #define DOSY		"(press y to quit.)" // [crispy] remove " to dos.)"
 

@@ -29,7 +29,7 @@
 
 typedef struct {
     const char *flag;
-    int bits;
+    uint32_t bits;
 } bex_thingbits_t;
 
 static const bex_thingbits_t bex_thingbitstable[] = {

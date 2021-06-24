@@ -46,7 +46,7 @@ static void TXT_LabelDrawer(TXT_UNCAST_ARG(label))
     }
     if (label->fgcolor >= 0)
     {
-        TXT_FGColor(label->fgcolor);
+        TXT_FGColor(static_cast<txt_color_t>(label->fgcolor));
     }
 
     TXT_GetXY(&origin_x, &origin_y);
@@ -141,7 +141,7 @@ void TXT_SetLabel(txt_label_t *label, const char *value)
 
     // Split into lines
 
-    label->lines = malloc(sizeof(char *) * label->h);
+    label->lines = reinterpret_cast<char**>(malloc(sizeof(char *) * label->h));
     label->lines[0] = label->label;
     y = 1;
 
@@ -172,7 +172,7 @@ txt_label_t *TXT_NewLabel(const char *text)
 {
     txt_label_t *label;
 
-    label = malloc(sizeof(txt_label_t));
+    label = reinterpret_cast<txt_label_t*>(malloc(sizeof(txt_label_t)));
 
     TXT_InitWidget(label, &txt_label_class);
     label->label = NULL;

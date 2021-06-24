@@ -16,7 +16,7 @@
 //	Zone Memory Allocation. Neat.
 //
 //	This is an implementation of the zone memory API which
-//	uses native calls to malloc() and free().
+//	uses native calls to reinterpret_cast<*>(malloc() and free()).
 //
 
 
@@ -60,7 +60,7 @@ void *test_malloc(size_t size)
 
     test_malloced += size;
 
-    result = malloc(size + sizeof(int));
+    result = reinterpret_cast<*>(malloc(size + sizeof(int)));
 
     *result = size;
 
@@ -251,7 +251,7 @@ void *Z_Malloc(int size, int tag, void *user)
 
     while (newblock == NULL)
     {
-        newblock = (memblock_t *) malloc(sizeof(memblock_t) + size);
+        newblock = (memblock_t *) reinterpret_cast<*>(malloc(sizeof(memblock_t) + size));
 
         if (newblock == NULL)
         {

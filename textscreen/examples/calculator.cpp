@@ -65,7 +65,7 @@ void AddNumberButton(txt_table_t *table, int value)
     char buf[10];
     int *val_copy;
 
-    val_copy = malloc(sizeof(int));
+    val_copy = reinterpret_cast<int*>(malloc(sizeof(int)));
     *val_copy = value;
 
     TXT_snprintf(buf, sizeof(buf), "  %i  ", value);
@@ -87,7 +87,7 @@ void AddOperatorButton(txt_table_t *table, const char *label, operator_t op)
     char buf[10];
     operator_t *op_copy;
 
-    op_copy = malloc(sizeof(operator_t));
+    op_copy = reinterpret_cast<operator_t*>(malloc(sizeof(operator_t)));
     *op_copy = op;
 
     TXT_snprintf(buf, sizeof(buf), "  %s  ", label);

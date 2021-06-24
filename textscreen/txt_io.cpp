@@ -140,9 +140,9 @@ void TXT_FGColor(txt_color_t color)
 
 void TXT_BGColor(int color, int blinking)
 {
-    bgcolor = color;
+    bgcolor = static_cast<txt_color_t>(color);
     if (blinking)
-        bgcolor |= TXT_COLOR_BLINKING;
+        bgcolor = static_cast<txt_color_t >(bgcolor | TXT_COLOR_BLINKING);
 }
 
 void TXT_SaveColors(txt_saved_colors_t *save)
@@ -153,8 +153,8 @@ void TXT_SaveColors(txt_saved_colors_t *save)
 
 void TXT_RestoreColors(txt_saved_colors_t *save)
 {
-    bgcolor = save->bgcolor;
-    fgcolor = save->fgcolor;
+    bgcolor = static_cast<txt_color_t>(save->bgcolor);
+    fgcolor = static_cast<txt_color_t>(save->fgcolor);
 }
 
 void TXT_ClearScreen(void)

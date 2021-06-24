@@ -43,7 +43,7 @@ void D_LoadSigilWad (void)
 
 	static const struct {
 		const char *name;
-		const char new_name[8];
+		const char new_name[9];
 	} sigil_lumps [] = {
 		{"CREDIT",   "SIGCREDI"},
 		{"HELP1",    "SIGHELP1"},
@@ -201,7 +201,7 @@ static void CheckLoadNerve (void)
 
 	static const struct {
 		const char *name;
-		const char new_name[8];
+		const char new_name[9];
 	} nerve_lumps [] = {
 		{"TITLEPIC", "NERVEPIC"},
 		{"INTERPIC", "NERVEINT"},

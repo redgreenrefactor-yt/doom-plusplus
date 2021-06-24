@@ -22,7 +22,7 @@
 #include "doomtype.hpp"
 #include "i_video.hpp"
 
-#include "txt_main.h"
+#include "txt_main.hpp"
 
 #define ENDOOM_W 80
 #define ENDOOM_H 25

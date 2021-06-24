@@ -464,7 +464,7 @@ void HU_Init(void)
 		DEH_snprintf(buffer, 9, "STCFN%.3d", toupper(laserpatch[i].c));
 		laserpatch[i].l = W_GetNumForName(buffer);
 
-		patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
+		patch = reinterpret_cast<patch_t*>(W_CacheLumpNum(laserpatch[i].l, PU_STATIC));
 
 		laserpatch[i].w -= SHORT(patch->leftoffset);
 		laserpatch[i].h -= SHORT(patch->topoffset);
@@ -478,7 +478,7 @@ void HU_Init(void)
 
 	if (!patch)
 	{
-		patch = W_CacheLumpNum(laserpatch[i].l, PU_STATIC);
+		patch = reinterpret_cast<patch_t*>(W_CacheLumpNum(laserpatch[i].l, PU_STATIC));
 	}
 
 	laserpatch[i].w += SHORT(patch->width)/2;
@@ -801,7 +801,7 @@ static void HU_DrawCrosshair (void)
     if (lump != laserpatch[crispy->crosshairtype].l)
     {
 	lump = laserpatch[crispy->crosshairtype].l;
-	patch = W_CacheLumpNum(lump, PU_STATIC);
+	patch = reinterpret_cast<patch_t*>(W_CacheLumpNum(lump, PU_STATIC));
     }
 
     dp_translucent = true;

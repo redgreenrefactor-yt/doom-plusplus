@@ -351,7 +351,7 @@ static unsigned int last_perc_count;
 // Configuration file variable, containing the port number for the
 // adlib chip.
 
-char *snd_dmxoption = "-opl3"; // [crispy] default to OPL3 emulation
+const char *snd_dmxoption = "-opl3"; // [crispy] default to OPL3 emulation
 int opl_io_port = 0x388;
 
 // If true, OPL sound channels are reversed to their correct arrangement
@@ -366,7 +366,7 @@ static boolean LoadInstrumentTable(void)
 {
     byte *lump;
 
-    lump = W_CacheLumpName(DEH_String("genmidi"), PU_STATIC);
+    lump = reinterpret_cast<byte*>(W_CacheLumpName(DEH_String("genmidi"), PU_STATIC));
 
     // DMX does not check header
 
@@ -460,7 +460,7 @@ static void ReleaseVoice(int index)
 
 // Load data to the specified operator
 
-static void LoadOperatorData(int operator, genmidi_op_t *data,
+static void LoadOperatorData(int op, genmidi_op_t *data,
                              boolean max_level, unsigned int *volume)
 {
     int level;
@@ -481,11 +481,11 @@ static void LoadOperatorData(int operator, genmidi_op_t *data,
 
     *volume = level;
 
-    OPL_WriteRegister(OPL_REGS_LEVEL + operator, level);
-    OPL_WriteRegister(OPL_REGS_TREMOLO + operator, data->tremolo);
-    OPL_WriteRegister(OPL_REGS_ATTACK + operator, data->attack);
-    OPL_WriteRegister(OPL_REGS_SUSTAIN + operator, data->sustain);
-    OPL_WriteRegister(OPL_REGS_WAVEFORM + operator, data->waveform);
+    OPL_WriteRegister(OPL_REGS_LEVEL + op, level);
+    OPL_WriteRegister(OPL_REGS_TREMOLO + op, data->tremolo);
+    OPL_WriteRegister(OPL_REGS_ATTACK + op, data->attack);
+    OPL_WriteRegister(OPL_REGS_SUSTAIN + op, data->sustain);
+    OPL_WriteRegister(OPL_REGS_WAVEFORM + op, data->waveform);
 }
 
 // Set the instrument for a particular voice.
@@ -1387,7 +1387,7 @@ static void RestartSong(void *unused)
 
 static void TrackTimerCallback(void *arg)
 {
-    opl_track_data_t *track = arg;
+    opl_track_data_t *track = reinterpret_cast<opl_track_data_t*>(arg);
     midi_event_t *event;
 
     // Get the next event and process it.
@@ -1485,11 +1485,11 @@ static void I_OPL_PlaySong(void *handle, boolean looping)
         return;
     }
 
-    file = handle;
+    file = reinterpret_cast<midi_file_t *>(handle);
 
     // Allocate track data.
 
-    tracks = malloc(MIDI_NumTracks(file) * sizeof(opl_track_data_t));
+    tracks = reinterpret_cast<opl_track_data_t *>(malloc(MIDI_NumTracks(file) * sizeof(opl_track_data_t)));
 
     num_tracks = MIDI_NumTracks(file);
     running_tracks = num_tracks;
@@ -1603,7 +1603,7 @@ static void I_OPL_UnRegisterSong(void *handle)
 
     if (handle != NULL)
     {
-        MIDI_FreeFile(handle);
+        MIDI_FreeFile(reinterpret_cast<midi_file_t *>(handle));
     }
 }
 
@@ -1656,7 +1656,7 @@ static void *I_OPL_RegisterSong(void *data, int len)
     filename = M_TempFile("doom.mid");
 
     // [crispy] remove MID file size limit
-    if (IsMid(data, len) /* && len < MAXMIDLENGTH */)
+    if (IsMid(reinterpret_cast<byte*>(data), len) /* && len < MAXMIDLENGTH */)
     {
         M_WriteFile(filename, data, len);
     }
@@ -1664,7 +1664,7 @@ static void *I_OPL_RegisterSong(void *data, int len)
     {
         // Assume a MUS file and try to convert
 
-        ConvertMus(data, len, filename);
+        ConvertMus(reinterpret_cast<byte*>(data), len, filename);
     }
 
     result = MIDI_LoadFile(filename);
@@ -1718,7 +1718,7 @@ static void I_OPL_ShutdownMusic(void)
 
 static boolean I_OPL_InitMusic(void)
 {
-    char *dmxoption;
+    const char *dmxoption;
     opl_init_result_t chip_type;
 
     OPL_SetSampleRate(snd_samplerate);

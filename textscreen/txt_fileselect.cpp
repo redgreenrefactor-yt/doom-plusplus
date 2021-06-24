@@ -101,7 +101,7 @@ static char *ExecReadOutput(char **argv)
         }
         else
         {
-            char *new_result = realloc(result, result_len + bytes + 1);
+            char *new_result = reinterpret_cast<char*>(realloc(result, result_len + bytes + 1));
             if (new_result == NULL)
             {
                 break;
@@ -234,7 +234,7 @@ static char *GenerateFilterString(const char **extensions)
         result_len += 16 + strlen(extensions[i]) * 3;
     }
 
-    result = malloc(result_len);
+    result = reinterpret_cast<*>(malloc(result_len));
     out = result; out_len = result_len;
 
     for (i = 0; extensions[i] != NULL; ++i)
@@ -357,7 +357,7 @@ static char *CreateEscapedString(const char *original)
         }
     }
 
-    result = malloc(strlen(original) + count_extras + 1);
+    result = reinterpret_cast<*>(malloc(strlen(original) + count_extras + 1));
     if (!result)
     {
         return NULL;
@@ -398,7 +398,7 @@ static char *CreateExtensionsList(const char **extensions)
         result_len += 5 + strlen(extensions[i]) * 2;
     }
 
-    result = malloc(result_len);
+    result = reinterpret_cast<*>(malloc(result_len));
     if (!result)
     {
         return NULL;
@@ -466,7 +466,7 @@ static char *GenerateSelector(const char *const window_title, const char **exten
         result_len += strlen(ext_list);
     }
 
-    result = malloc(result_len);
+    result = reinterpret_cast<*>(malloc(result_len));
     if (!result)
     {
         free(window_title_escaped);
@@ -505,7 +505,7 @@ static char *GenerateAppleScript(const char *window_title, const char **extensio
     }
 
     result_len = strlen(APPLESCRIPT_WRAPPER) + strlen(selector);
-    result = malloc(result_len);
+    result = reinterpret_cast<*>(malloc(result_len));
     if (!result)
     {
         free(selector);
@@ -588,7 +588,7 @@ static char *ExpandExtension(const char *orig)
 
     oldlen = strlen(orig);
     newlen = oldlen * 4; // pathological case: 'w' => '[Ww]'
-    newext = malloc(newlen+1);
+    newext = reinterpret_cast<char*>(malloc(newlen+1));
 
     if (newext == NULL)
     {
@@ -627,7 +627,7 @@ char *TXT_SelectFile(const char *window_title, const char **extensions)
         return NULL;
     }
 
-    argv = calloc(5 + NumExtensions(extensions), sizeof(char *));
+    argv = reinterpret_cast<char**>(calloc(5 + NumExtensions(extensions), sizeof(char *)));
     argv[0] = strdup(ZENITY_BINARY);
     argv[1] = strdup("--file-selection");
     argc = 2;
@@ -635,7 +635,7 @@ char *TXT_SelectFile(const char *window_title, const char **extensions)
     if (window_title != NULL)
     {
         len = 10 + strlen(window_title);
-        argv[argc] = malloc(len);
+        argv[argc] = reinterpret_cast<char*>(malloc(len));
         TXT_snprintf(argv[argc], len, "--title=%s", window_title);
         ++argc;
     }
@@ -653,7 +653,7 @@ char *TXT_SelectFile(const char *window_title, const char **extensions)
             if (newext)
             {
                 len = 30 + strlen(extensions[i]) + strlen(newext);
-                argv[argc] = malloc(len);
+                argv[argc] = reinterpret_cast<char*>(malloc(len));
                 TXT_snprintf(argv[argc], len, "--file-filter=.%s | *.%s",
                              extensions[i], newext);
                 ++argc;
@@ -737,7 +737,7 @@ static int DoSelectFile(txt_fileselect_t *fileselect)
             path = strdup("");
         }
 
-        var = fileselect->inputbox->value;
+        var = reinterpret_cast<char**>(fileselect->inputbox->value);
         free(*var);
         *var = path;
         return 1;
@@ -819,7 +819,7 @@ txt_fileselect_t *TXT_NewFileSelector(char **variable, int size,
 {
     txt_fileselect_t *fileselect;
 
-    fileselect = malloc(sizeof(txt_fileselect_t));
+    fileselect = reinterpret_cast<txt_fileselect_t*>(malloc(sizeof(txt_fileselect_t)));
     TXT_InitWidget(fileselect, &txt_fileselect_class);
     fileselect->inputbox = TXT_NewInputBox(variable, 1024);
     fileselect->inputbox->widget.parent = &fileselect->widget;

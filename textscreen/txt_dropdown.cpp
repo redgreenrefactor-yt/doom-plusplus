@@ -159,7 +159,7 @@ static void OpenSelectorWindow(txt_dropdown_list_t *list)
 
         // Callback struct
 
-        data = malloc(sizeof(callback_data_t));
+        data = reinterpret_cast<callback_data_t*>(malloc(sizeof(callback_data_t)));
         data->list = list;
         data->window = window;
         data->item = i;
@@ -294,7 +294,7 @@ txt_dropdown_list_t *TXT_NewDropdownList(int *variable, const char **values,
 {
     txt_dropdown_list_t *list;
 
-    list = malloc(sizeof(txt_dropdown_list_t));
+    list = reinterpret_cast<txt_dropdown_list_t*>(malloc(sizeof(txt_dropdown_list_t)));
 
     TXT_InitWidget(list, &txt_dropdown_list_class);
     list->variable = variable;

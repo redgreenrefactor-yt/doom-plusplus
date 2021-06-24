@@ -125,7 +125,7 @@ txt_radiobutton_t *TXT_NewRadioButton(const char *label, int *variable, int valu
 {
     txt_radiobutton_t *radiobutton;
 
-    radiobutton = malloc(sizeof(txt_radiobutton_t));
+    radiobutton = reinterpret_cast<txt_radiobutton_t*>(malloc(sizeof(txt_radiobutton_t)));
 
     TXT_InitWidget(radiobutton, &txt_radiobutton_class);
     radiobutton->label = strdup(label);

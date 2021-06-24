@@ -212,7 +212,7 @@ static allocated_sound_t *AllocateSound(sfxinfo_t *sfxinfo, size_t len)
 
     do
     {
-        snd = malloc(sizeof(allocated_sound_t) + len);
+        snd = reinterpret_cast<allocated_sound_t *>(malloc(sizeof(allocated_sound_t) + len));
 
         // Out of memory?  Try to free an old sound, then loop round
         // and try again.
@@ -417,13 +417,13 @@ static boolean ExpandSoundData_SRC(sfxinfo_t *sfxinfo,
     uint32_t samplecount = length / (bits / 8);
 
     src_data.input_frames = samplecount;
-    data_in = malloc(samplecount * sizeof(float));
+    data_in = reinterpret_cast<*>(malloc(samplecount * sizeof(float)));
     src_data.data_in = data_in;
     src_data.src_ratio = (double)mixer_freq / samplerate;
 
     // We include some extra space here in case of rounding-up.
     src_data.output_frames = src_data.src_ratio * samplecount + (mixer_freq / 4);
-    src_data.data_out = malloc(src_data.output_frames * sizeof(float));
+    src_data.data_out = reinterpret_cast<*>(malloc(src_data.output_frames * sizeof(float)));
 
     assert(src_data.data_in != NULL && src_data.data_out != NULL);
 
@@ -651,7 +651,7 @@ static boolean ExpandSoundData_SDL(sfxinfo_t *sfxinfo,
                           mixer_format, mixer_channels, mixer_freq))
     {
         convertor.len = length;
-        convertor.buf = malloc(convertor.len * convertor.len_mult);
+        convertor.buf = reinterpret_cast<Uint8*>(malloc(convertor.len * convertor.len_mult));
         assert(convertor.buf != NULL);
         memcpy(convertor.buf, data, length);
 
@@ -750,7 +750,7 @@ static boolean CacheSFX(sfxinfo_t *sfxinfo)
     // need to load the sound
 
     lumpnum = sfxinfo->lumpnum;
-    data = W_CacheLumpNum(lumpnum, PU_STATIC);
+    data = reinterpret_cast<byte*>(W_CacheLumpNum(lumpnum, PU_STATIC));
     lumplen = W_LumpLength(lumpnum);
 
     // [crispy] Check if this is a valid RIFF wav file

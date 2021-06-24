@@ -26,14 +26,14 @@
 
 #include "doomtype.hpp"
 
-#include "i_swap.h"
-#include "i_system.h"
-#include "i_video.h"
-#include "m_misc.h"
-#include "v_diskicon.h"
-#include "z_zone.h"
+#include "i_swap.hpp"
+#include "i_system.hpp"
+#include "i_video.hpp"
+#include "m_misc.hpp"
+#include "v_diskicon.hpp"
+#include "z_zone.hpp"
 
-#include "w_wad.h"
+#include "w_wad.hpp"
 
 typedef PACKED_STRUCT (
 {
@@ -149,7 +149,7 @@ wad_file_t *W_AddFile (const char *filename)
         // them back.  Effectively we're constructing a "fake WAD directory"
         // here, as it would appear on disk.
 
-	fileinfo = Z_Malloc(sizeof(filelump_t), PU_STATIC, 0);
+	fileinfo = reinterpret_cast<filelump_t *>(Z_Malloc(sizeof(filelump_t), PU_STATIC, 0));
 	fileinfo->filepos = LONG(0);
 	fileinfo->size = LONG(wad_file->length);
 
@@ -191,14 +191,14 @@ wad_file_t *W_AddFile (const char *filename)
 
 	header.infotableofs = LONG(header.infotableofs);
 	length = header.numlumps*sizeof(filelump_t);
-	fileinfo = Z_Malloc(length, PU_STATIC, 0);
+	fileinfo = reinterpret_cast<filelump_t *>(Z_Malloc(length, PU_STATIC, 0));
 
         W_Read(wad_file, header.infotableofs, fileinfo, length);
 	numfilelumps = header.numlumps;
     }
 
     // Increase size of numlumps array to accomodate the new file.
-    filelumps = calloc(numfilelumps, sizeof(lumpinfo_t));
+    filelumps = reinterpret_cast<lumpinfo_t *>(calloc(numfilelumps, sizeof(lumpinfo_t)));
     if (filelumps == NULL)
     {
         W_CloseFile(wad_file);
@@ -207,7 +207,7 @@ wad_file_t *W_AddFile (const char *filename)
 
     startlump = numlumps;
     numlumps += numfilelumps;
-    lumpinfo = I_Realloc(lumpinfo, numlumps * sizeof(lumpinfo_t *));
+    lumpinfo = reinterpret_cast<lumpinfo_t **>(I_Realloc(lumpinfo, numlumps * sizeof(lumpinfo_t *)));
     filerover = fileinfo;
 
     for (i = startlump; i < numlumps; ++i)
@@ -423,7 +423,7 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
     {
         // Already cached, so just switch the zone tag.
 
-        result = lump->cache;
+        result = reinterpret_cast<byte*>(lump->cache);
         Z_ChangeTag(lump->cache, tag);
     }
     else
@@ -432,7 +432,7 @@ void *W_CacheLumpNum(lumpindex_t lumpnum, int tag)
 
         lump->cache = Z_Malloc(W_LumpLength(lumpnum), tag, &lump->cache);
 	W_ReadLump (lumpnum, lump->cache);
-        result = lump->cache;
+        result = reinterpret_cast<byte*>(lump->cache);
     }
 	
     return result;
@@ -565,7 +565,7 @@ void W_GenerateHashTable(void)
     // Generate hash table
     if (numlumps > 0)
     {
-        lumphash = Z_Malloc(sizeof(lumpindex_t) * numlumps, PU_STATIC, NULL);
+        lumphash = reinterpret_cast<lumpindex_t *>(Z_Malloc(sizeof(lumpindex_t) * numlumps, PU_STATIC, NULL));
 
         for (i = 0; i < numlumps; ++i)
         {
@@ -667,7 +667,7 @@ int W_LumpDump (const char *lumpname)
     }
     free(filename);
 
-    lump_p = malloc(lumpinfo[i]->size);
+    lump_p = reinterpret_cast<char*>(malloc(lumpinfo[i]->size));
     W_ReadLump(i, lump_p);
     fwrite(lump_p, 1, lumpinfo[i]->size, fp);
     free(lump_p);

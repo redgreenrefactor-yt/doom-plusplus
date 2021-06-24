@@ -224,7 +224,7 @@ void R_InitSpriteDefs(const char **namelist)
     if (!numsprites)
 	return;
 		
-    sprites = Z_Malloc(numsprites *sizeof(*sprites), PU_STATIC, NULL);
+    sprites = reinterpret_cast<spritedef_t *>(Z_Malloc(numsprites *sizeof(*sprites), PU_STATIC, NULL));
 	
     start = firstspritelump-1;
     end = lastspritelump+1;
@@ -311,8 +311,8 @@ void R_InitSpriteDefs(const char **namelist)
 	
 	// allocate space for the frames present and copy sprtemp to it
 	sprites[i].numframes = maxframe;
-	sprites[i].spriteframes = 
-	    Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, NULL);
+	sprites[i].spriteframes =
+            reinterpret_cast<spriteframe_t *>( Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, NULL));
 	memcpy (sprites[i].spriteframes, sprtemp, maxframe*sizeof(spriteframe_t));
     }
 
@@ -383,7 +383,7 @@ vissprite_t* R_NewVisSprite (void)
 	return &overflowsprite;
 
 	numvissprites = numvissprites ? 2 * numvissprites : MAXVISSPRITES;
-	vissprites = I_Realloc(vissprites, numvissprites * sizeof(*vissprites));
+	vissprites = reinterpret_cast<vissprite_t *>(I_Realloc(vissprites, numvissprites * sizeof(*vissprites)));
 	memset(vissprites + numvissprites_old, 0, (numvissprites - numvissprites_old) * sizeof(*vissprites));
 
 	vissprite_p = vissprites + numvissprites_old;
@@ -478,7 +478,7 @@ R_DrawVisSprite
     patch_t*		patch;
 	
 	
-    patch = W_CacheLumpNum (vis->patch+firstspritelump, PU_CACHE);
+    patch = reinterpret_cast<patch_t*>(W_CacheLumpNum (vis->patch+firstspritelump, PU_CACHE));
 
     // [crispy] brightmaps for select sprites
     dc_colormap[0] = vis->colormap[0];
@@ -880,7 +880,7 @@ static void R_DrawLSprite (void)
     if (lump != laserpatch[crispy->crosshairtype].l)
     {
 	lump = laserpatch[crispy->crosshairtype].l;
-	patch = W_CacheLumpNum(lump, PU_STATIC);
+	patch = reinterpret_cast<patch_t*>(W_CacheLumpNum(lump, PU_STATIC));
     }
 
     P_LineLaser(viewplayer->mo, viewangle,
@@ -1123,7 +1123,7 @@ void R_DrawPlayerSprites (void)
 	 i++,psp++)
     {
 	if (psp->state)
-	    R_DrawPSprite (psp, i); // [crispy] pass gun or flash sprite
+	    R_DrawPSprite (psp, static_cast<psprnum_t >(i)); // [crispy] pass gun or flash sprite
     }
 }
 

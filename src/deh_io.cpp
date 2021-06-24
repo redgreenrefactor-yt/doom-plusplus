@@ -70,12 +70,12 @@ static deh_context_t *DEH_NewContext(void)
 {
     deh_context_t *context;
 
-    context = Z_Malloc(sizeof(*context), PU_STATIC, NULL);
+    context = reinterpret_cast<deh_context_t *>(Z_Malloc(sizeof(*context), PU_STATIC, NULL));
 
     // Initial read buffer size of 128 bytes
 
     context->readbuffer_size = 128;
-    context->readbuffer = Z_Malloc(context->readbuffer_size, PU_STATIC, NULL);
+    context->readbuffer = reinterpret_cast<char*>(Z_Malloc(context->readbuffer_size, PU_STATIC, NULL));
     context->linenum = 0;
     context->last_was_newline = true;
 
@@ -120,11 +120,11 @@ deh_context_t *DEH_OpenLump(int lumpnum)
 
     context->type = DEH_INPUT_LUMP;
     context->lumpnum = lumpnum;
-    context->input_buffer = lump;
+    context->input_buffer = reinterpret_cast<unsigned char*>(lump);
     context->input_buffer_len = W_LumpLength(lumpnum);
     context->input_buffer_pos = 0;
 
-    context->filename = malloc(9);
+    context->filename = reinterpret_cast<char*>(malloc(9));
     M_StringCopy(context->filename, lumpinfo[lumpnum]->name, 9);
 
     return context;
@@ -218,7 +218,7 @@ static void IncreaseReadBuffer(deh_context_t *context)
     int newbuffer_size;
 
     newbuffer_size = context->readbuffer_size * 2;
-    newbuffer = Z_Malloc(newbuffer_size, PU_STATIC, NULL);
+    newbuffer = reinterpret_cast<char*>(Z_Malloc(newbuffer_size, PU_STATIC, NULL));
 
     memcpy(newbuffer, context->readbuffer, context->readbuffer_size);
 

@@ -373,7 +373,7 @@ void P_NewChaseDir (mobj_t*	actor)
     
     dirtype_t	d[3];
     
-    int		tdir;
+    dirtype_t 	tdir;
     dirtype_t	olddir;
     
     dirtype_t	turnaround;
@@ -381,7 +381,7 @@ void P_NewChaseDir (mobj_t*	actor)
     if (!actor->target)
 	I_Error ("P_NewChaseDir: called with no target");
 		
-    olddir = actor->movedir;
+    olddir = static_cast<dirtype_t >(actor->movedir);
     turnaround=opposite[olddir];
 
     deltax = actor->target->x - actor->x;
@@ -457,7 +457,7 @@ void P_NewChaseDir (mobj_t*	actor)
     {
 	for ( tdir=DI_EAST;
 	      tdir<=DI_SOUTHEAST;
-	      tdir++ )
+	      tdir = static_cast<dirtype_t>(static_cast<int>(tdir) + 1) )
 	{
 	    if (tdir != (int) turnaround)
 	    {
@@ -471,8 +471,8 @@ void P_NewChaseDir (mobj_t*	actor)
     else
     {
 	for ( tdir=DI_SOUTHEAST;
-	      tdir != (DI_EAST-1);
-	      tdir-- )
+	      tdir != static_cast<dirtype_t >(DI_EAST-1);
+	      tdir = static_cast<dirtype_t>(static_cast<int>(tdir) - 1) )
 	{
 	    if (tdir != (int) turnaround)
 	    {
@@ -678,7 +678,7 @@ void A_Look (mobj_t* actor)
 	}
     }
 
-    P_SetMobjState (actor, actor->info->seestate);
+    P_SetMobjState (actor, static_cast<statenum_t >(actor->info->seestate));
 }
 
 
@@ -726,7 +726,7 @@ void A_Chase (mobj_t*	actor)
 	if (P_LookForPlayers(actor,true))
 	    return; 	// got a new target
 	
-	P_SetMobjState (actor, actor->info->spawnstate);
+	P_SetMobjState (actor, static_cast<statenum_t>(actor->info->spawnstate));
 	return;
     }
     
@@ -746,7 +746,7 @@ void A_Chase (mobj_t*	actor)
 	if (actor->info->attacksound)
 	    S_StartSound (actor, actor->info->attacksound);
 
-	P_SetMobjState (actor, actor->info->meleestate);
+	P_SetMobjState (actor, static_cast<statenum_t >(actor->info->meleestate));
 	return;
     }
     
@@ -762,7 +762,7 @@ void A_Chase (mobj_t*	actor)
 	if (!P_CheckMissileRange (actor))
 	    goto nomissile;
 	
-	P_SetMobjState (actor, actor->info->missilestate);
+	P_SetMobjState (actor, static_cast<statenum_t >(actor->info->missilestate));
 	actor->flags |= MF_JUSTATTACKED;
 	return;
     }
@@ -892,7 +892,7 @@ void A_CPosRefire (mobj_t* actor)
 	|| actor->target->health <= 0
 	|| !P_CheckSight (actor, actor->target) )
     {
-	P_SetMobjState (actor, actor->info->seestate);
+	P_SetMobjState (actor, static_cast<statenum_t >(actor->info->seestate));
     }
 }
 
@@ -909,7 +909,7 @@ void A_SpidRefire (mobj_t* actor)
 	|| actor->target->health <= 0
 	|| !P_CheckSight (actor, actor->target) )
     {
-	P_SetMobjState (actor, actor->info->seestate);
+	P_SetMobjState (actor, static_cast<statenum_t >(actor->info->seestate));
     }
 }
 
@@ -1239,7 +1239,7 @@ void A_VileChase (mobj_t* actor)
 		    S_StartSound (corpsehit, sfx_slop);
 		    info = corpsehit->info;
 		    
-		    P_SetMobjState (corpsehit,info->raisestate);
+		    P_SetMobjState (corpsehit, static_cast<statenum_t >(info->raisestate));
 		    corpsehit->height <<= 2;
 		    corpsehit->flags = info->flags;
 		    corpsehit->health = info->spawnhealth;
@@ -1923,7 +1923,7 @@ void A_BrainAwake (mobj_t* mo)
 	    if (numbraintargets == maxbraintargets)
 	    {
 		maxbraintargets = maxbraintargets ? 2 * maxbraintargets : 32;
-		braintargets = I_Realloc(braintargets, maxbraintargets * sizeof(*braintargets));
+		braintargets = reinterpret_cast<mobj_t **>(I_Realloc(braintargets, maxbraintargets * sizeof(*braintargets)));
 
 		if (maxbraintargets > 32)
 		    fprintf(stderr, "R_BrainAwake: Raised braintargets limit to %d.\n", maxbraintargets);
@@ -2109,7 +2109,7 @@ void A_SpawnFly (mobj_t* mo)
     extrakills++;
 
     if (P_LookForPlayers (newmobj, true) )
-	P_SetMobjState (newmobj, newmobj->info->seestate);
+	P_SetMobjState (newmobj, static_cast<statenum_t >(newmobj->info->seestate));
 	
     // telefrag anything in this spot
     P_TeleportMove (newmobj, newmobj->x, newmobj->y);

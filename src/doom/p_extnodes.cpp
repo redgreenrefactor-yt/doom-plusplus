@@ -41,7 +41,7 @@ sector_t* GetSectorAtNullAddress(void);
 // format or DeePBSP format and/or LINEDEFS and THINGS lumps in Hexen format
 mapformat_t P_CheckMapFormat (int lumpnum)
 {
-    mapformat_t format = 0;
+    mapformat_t format {};
     byte *nodes = NULL;
     int b;
 
@@ -49,32 +49,32 @@ mapformat_t P_CheckMapFormat (int lumpnum)
         !strncasecmp(lumpinfo[b]->name, "BEHAVIOR", 8))
     {
 	fprintf(stderr, "Hexen (");
-	format |= MFMT_HEXEN;
+	format = static_cast<mapformat_t>(format | MFMT_HEXEN);
     }
     else
 	fprintf(stderr, "Doom (");
 
     if (!((b = lumpnum+ML_NODES) < numlumps &&
-        (nodes = W_CacheLumpNum(b, PU_CACHE)) &&
+        (nodes = reinterpret_cast<byte *>(W_CacheLumpNum(b, PU_CACHE))) &&
         W_LumpLength(b) > 0))
 	fprintf(stderr, "no nodes");
     else
     if (!memcmp(nodes, "xNd4\0\0\0\0", 8))
     {
 	fprintf(stderr, "DeePBSP");
-	format |= MFMT_DEEPBSP;
+	format = static_cast<mapformat_t>(format | MFMT_DEEPBSP);
     }
     else
     if (!memcmp(nodes, "XNOD", 4))
     {
 	fprintf(stderr, "ZDBSP");
-	format |= MFMT_ZDBSPX;
+	format = static_cast<mapformat_t>(format | MFMT_ZDBSPX);
     }
     else
     if (!memcmp(nodes, "ZNOD", 4))
     {
 	fprintf(stderr, "compressed ZDBSP");
-	format |= MFMT_ZDBSPZ;
+	format = static_cast<mapformat_t>(format | MFMT_ZDBSPZ);
     }
     else
 	fprintf(stderr, "BSP");
@@ -93,7 +93,7 @@ void P_LoadSegs_DeePBSP (int lump)
     mapseg_deepbsp_t *data;
 
     numsegs = W_LumpLength(lump) / sizeof(mapseg_deepbsp_t);
-    segs = Z_Malloc(numsegs * sizeof(seg_t), PU_LEVEL, 0);
+    segs = reinterpret_cast<seg_t*>(Z_Malloc(numsegs * sizeof(seg_t), PU_LEVEL, 0));
     data = (mapseg_deepbsp_t *)W_CacheLumpNum(lump, PU_STATIC);
 
     for (i = 0; i < numsegs; i++)
@@ -168,7 +168,7 @@ void P_LoadSubsectors_DeePBSP (int lump)
     int i;
 
     numsubsectors = W_LumpLength(lump) / sizeof(mapsubsector_deepbsp_t);
-    subsectors = Z_Malloc(numsubsectors * sizeof(subsector_t), PU_LEVEL, 0);
+    subsectors = reinterpret_cast<subsector_t *>(Z_Malloc(numsubsectors * sizeof(subsector_t), PU_LEVEL, 0));
     data = (mapsubsector_deepbsp_t *)W_CacheLumpNum(lump, PU_STATIC);
 
     // [crispy] fail on missing subsectors
@@ -192,8 +192,8 @@ void P_LoadNodes_DeePBSP (int lump)
     int i;
 
     numnodes = (W_LumpLength (lump) - 8) / sizeof(mapnode_deepbsp_t);
-    nodes = Z_Malloc(numnodes * sizeof(node_t), PU_LEVEL, 0);
-    data = W_CacheLumpNum (lump, PU_STATIC);
+    nodes = reinterpret_cast<node_t*>(Z_Malloc(numnodes * sizeof(node_t), PU_LEVEL, 0));
+    data = reinterpret_cast<byte*>(W_CacheLumpNum (lump, PU_STATIC));
 
     // [crispy] warn about missing nodes
     if (!data || !numnodes)
@@ -255,7 +255,7 @@ void P_LoadNodes_ZDBSP (int lump, boolean compressed)
     unsigned int numNodes;
     vertex_t *newvertarray = NULL;
 
-    data = W_CacheLumpNum(lump, PU_LEVEL);
+    data = reinterpret_cast<byte *>(W_CacheLumpNum(lump, PU_LEVEL));
 
     // 0. Uncompress nodes lump (or simply skip header)
 
@@ -272,7 +272,7 @@ void P_LoadNodes_ZDBSP (int lump, boolean compressed)
 	output = Z_Malloc(outlen, PU_STATIC, 0);
 
 	// initialize stream state for decompression
-	zstream = malloc(sizeof(*zstream));
+	zstream = reinterpret_cast<*>(malloc(sizeof(*zstream)));
 	memset(zstream, 0, sizeof(*zstream));
 	zstream->next_in = data + 4;
 	zstream->avail_in = len - 4;
@@ -330,7 +330,7 @@ void P_LoadNodes_ZDBSP (int lump, boolean compressed)
     }
     else
     {
-	newvertarray = Z_Malloc((orgVerts + newVerts) * sizeof(vertex_t), PU_LEVEL, 0);
+	newvertarray = reinterpret_cast<vertex_t *>(Z_Malloc((orgVerts + newVerts) * sizeof(vertex_t), PU_LEVEL, 0));
 	memcpy(newvertarray, vertexes, orgVerts * sizeof(vertex_t));
 	memset(newvertarray + orgVerts, 0, newVerts * sizeof(vertex_t));
     }
@@ -368,7 +368,7 @@ void P_LoadNodes_ZDBSP (int lump, boolean compressed)
 	I_Error("P_LoadNodes: No subsectors in map!");
 
     numsubsectors = numSubs;
-    subsectors = Z_Malloc(numsubsectors * sizeof(subsector_t), PU_LEVEL, 0);
+    subsectors = reinterpret_cast<subsector_t *>(Z_Malloc(numsubsectors * sizeof(subsector_t), PU_LEVEL, 0));
 
     for (i = currSeg = 0; i < numsubsectors; i++)
     {
@@ -393,7 +393,7 @@ void P_LoadNodes_ZDBSP (int lump, boolean compressed)
     }
 
     numsegs = numSegs;
-    segs = Z_Malloc(numsegs * sizeof(seg_t), PU_LEVEL, 0);
+    segs = reinterpret_cast<seg_t *>(Z_Malloc(numsegs * sizeof(seg_t), PU_LEVEL, 0));
 
     for (i = 0; i < numsegs; i++)
     {
@@ -462,7 +462,7 @@ void P_LoadNodes_ZDBSP (int lump, boolean compressed)
     data += sizeof(numNodes);
 
     numnodes = numNodes;
-    nodes = Z_Malloc(numnodes * sizeof(node_t), PU_LEVEL, 0);
+    nodes = reinterpret_cast<node_t *>(Z_Malloc(numnodes * sizeof(node_t), PU_LEVEL, 0));
 
     for (i = 0; i < numnodes; i++)
     {
@@ -502,7 +502,7 @@ void P_LoadThings_Hexen (int lump)
     mapthing_hexen_t *mt;
     int numthings;
 
-    data = W_CacheLumpNum(lump, PU_STATIC);
+    data = reinterpret_cast<byte*>(W_CacheLumpNum(lump, PU_STATIC));
     numthings = W_LumpLength(lump) / sizeof(mapthing_hexen_t);
 
     mt = (mapthing_hexen_t *) data;
@@ -541,9 +541,9 @@ void P_LoadLineDefs_Hexen (int lump)
     int warn; // [crispy] warn about unknown linedef types
 
     numlines = W_LumpLength(lump) / sizeof(maplinedef_hexen_t);
-    lines = Z_Malloc(numlines * sizeof(line_t), PU_LEVEL, 0);
+    lines = reinterpret_cast<line_t *>(Z_Malloc(numlines * sizeof(line_t), PU_LEVEL, 0));
     memset(lines, 0, numlines * sizeof(line_t));
-    data = W_CacheLumpNum(lump, PU_STATIC);
+    data = reinterpret_cast<byte*>(W_CacheLumpNum(lump, PU_STATIC));
 
     mld = (maplinedef_hexen_t *) data;
     ld = lines;

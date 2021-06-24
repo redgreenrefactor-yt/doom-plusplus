@@ -276,20 +276,20 @@ void R_GenerateComposite (int texnum)
 	
     texture = textures[texnum];
 
-    block = Z_Malloc (texturecompositesize[texnum],
+    block = reinterpret_cast<byte*>(Z_Malloc (texturecompositesize[texnum],
 		      PU_STATIC, 
-		      &texturecomposite[texnum]);	
+		      &texturecomposite[texnum]));
     // [crispy] memory block for opaque textures
-    block2 = Z_Malloc (texture->width * texture->height,
+    block2 = reinterpret_cast<byte*>(Z_Malloc (texture->width * texture->height,
 		      PU_STATIC,
-		      &texturecomposite2[texnum]);
+		      &texturecomposite2[texnum]));
 
     collump = texturecolumnlump[texnum];
     colofs = texturecolumnofs[texnum];
     colofs2 = texturecolumnofs2[texnum];
     
     // killough 4/9/98: marks to identify transparent regions in merged textures
-    marks = calloc(texture->width, texture->height);
+    marks = reinterpret_cast<byte*>(calloc(texture->width, texture->height));
 
     // [crispy] initialize composite background to palette index 0 (usually black)
     memset(block, 0, texturecompositesize[texnum]);
@@ -299,7 +299,7 @@ void R_GenerateComposite (int texnum)
 	 i<texture->patchcount;
 	 i++, patch++)
     {
-	realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
+	realpatch = reinterpret_cast<patch_t *>(W_CacheLumpNum (patch->patch, PU_CACHE));
 	x1 = patch->originx;
 	x2 = x1 + SHORT(realpatch->width);
 
@@ -336,7 +336,7 @@ void R_GenerateComposite (int texnum)
     // killough 4/9/98: Next, convert multipatched columns into true columns,
     // to fix Medusa bug while still allowing for transparent regions.
 
-    source = I_Realloc(NULL, texture->height); // temporary column
+    source = reinterpret_cast<byte*>(I_Realloc(NULL, texture->height)); // temporary column
     for (i = 0; i < texture->width; i++)
     {
 	// [crispy] generate composites for all columns
@@ -449,7 +449,7 @@ void R_GenerateLookup (int texnum)
 	 i<texture->patchcount;
 	 i++, patch++)
     {
-	realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
+	realpatch = reinterpret_cast<patch_t *>(W_CacheLumpNum (patch->patch, PU_CACHE));
 	x1 = patch->originx;
 	x2 = x1 + SHORT(realpatch->width);
 	
@@ -489,7 +489,7 @@ void R_GenerateLookup (int texnum)
 	for (i = texture->patchcount, patch = texture->patches; --i >= 0; )
 	{
 	    int pat = patch->patch;
-	    const patch_t *realpatch = W_CacheLumpNum(pat, PU_CACHE);
+	    const patch_t *realpatch = reinterpret_cast<patch_t *>(W_CacheLumpNum(pat, PU_CACHE));
 	    int x, x1 = patch++->originx, x2 = x1 + SHORT(realpatch->width);
 	    const int *cofs = realpatch->columnofs - x1;
 
@@ -628,7 +628,7 @@ static void GenerateTextureHashTable(void)
     int key;
 
     textures_hashtable 
-            = Z_Malloc(sizeof(texture_t *) * numtextures, PU_STATIC, 0);
+            = reinterpret_cast<texture_t**>(Z_Malloc(sizeof(texture_t *) * numtextures, PU_STATIC, 0));
 
     memset(textures_hashtable, 0, sizeof(texture_t *) * numtextures);
 
@@ -726,8 +726,8 @@ void R_InitTextures (void)
     int			numtexturelumps = 0;
 
     // [crispy] allocate memory for the pnameslumps and texturelumps arrays
-    pnameslumps = I_Realloc(pnameslumps, maxpnameslumps * sizeof(*pnameslumps));
-    texturelumps = I_Realloc(texturelumps, maxtexturelumps * sizeof(*texturelumps));
+    pnameslumps = reinterpret_cast<pnameslump_t *>(I_Realloc(pnameslumps, maxpnameslumps * sizeof(*pnameslumps)));
+    texturelumps = reinterpret_cast<texturelump_t *>(I_Realloc(texturelumps, maxtexturelumps * sizeof(*texturelumps)));
 
     // [crispy] make sure the first available TEXTURE1/2 lumps
     // are always processed first
@@ -747,7 +747,7 @@ void R_InitTextures (void)
 	    if (numpnameslumps == maxpnameslumps)
 	    {
 		maxpnameslumps++;
-		pnameslumps = I_Realloc(pnameslumps, maxpnameslumps * sizeof(*pnameslumps));
+		pnameslumps = reinterpret_cast<pnameslump_t *>(I_Realloc(pnameslumps, maxpnameslumps * sizeof(*pnameslumps)));
 	    }
 
 	    pnameslumps[numpnameslumps].lumpnum = i;
@@ -780,7 +780,7 @@ void R_InitTextures (void)
 	    if (numtexturelumps == maxtexturelumps)
 	    {
 		maxtexturelumps++;
-		texturelumps = I_Realloc(texturelumps, maxtexturelumps * sizeof(*texturelumps));
+		texturelumps = reinterpret_cast<texturelump_t *>(I_Realloc(texturelumps, maxtexturelumps * sizeof(*texturelumps)));
 	    }
 
 	    // [crispy] do not proceed any further, yet
@@ -793,7 +793,7 @@ void R_InitTextures (void)
 
     // [crispy] fill up the patch lookup table
     name[8] = 0;
-    patchlookup = Z_Malloc(nummappatches * sizeof(*patchlookup), PU_STATIC, NULL);
+    patchlookup = reinterpret_cast<int*>(Z_Malloc(nummappatches * sizeof(*patchlookup), PU_STATIC, NULL));
     for (i = 0, k = 0; i < numpnameslumps; i++)
     {
 	for (j = 0; j < pnameslumps[i].nummappatches; j++)
@@ -816,7 +816,7 @@ void R_InitTextures (void)
     numtextures = 0;
     for (i = 0; i < numtexturelumps; i++)
     {
-	texturelumps[i].maptex = W_CacheLumpNum(texturelumps[i].lumpnum, PU_STATIC);
+	texturelumps[i].maptex = reinterpret_cast<int*>(W_CacheLumpNum(texturelumps[i].lumpnum, PU_STATIC));
 	texturelumps[i].maxoff = W_LumpLength(texturelumps[i].lumpnum);
 	texturelumps[i].numtextures = LONG(*texturelumps[i].maptex);
 
@@ -849,17 +849,17 @@ void R_InitTextures (void)
     // [crispy] pointer to (i.e. actually before) the first texture file
     texturelump = texturelumps - 1; // [crispy] gets immediately increased below
 
-    textures = Z_Malloc (numtextures * sizeof(*textures), PU_STATIC, 0);
-    texturecolumnlump = Z_Malloc (numtextures * sizeof(*texturecolumnlump), PU_STATIC, 0);
-    texturecolumnofs = Z_Malloc (numtextures * sizeof(*texturecolumnofs), PU_STATIC, 0);
-    texturecolumnofs2 = Z_Malloc (numtextures * sizeof(*texturecolumnofs2), PU_STATIC, 0);
-    texturecomposite = Z_Malloc (numtextures * sizeof(*texturecomposite), PU_STATIC, 0);
-    texturecomposite2 = Z_Malloc (numtextures * sizeof(*texturecomposite2), PU_STATIC, 0);
-    texturecompositesize = Z_Malloc (numtextures * sizeof(*texturecompositesize), PU_STATIC, 0);
-    texturewidthmask = Z_Malloc (numtextures * sizeof(*texturewidthmask), PU_STATIC, 0);
-    texturewidth = Z_Malloc (numtextures * sizeof(*texturewidth), PU_STATIC, 0);
-    textureheight = Z_Malloc (numtextures * sizeof(*textureheight), PU_STATIC, 0);
-    texturebrightmap = Z_Malloc (numtextures * sizeof(*texturebrightmap), PU_STATIC, 0);
+    textures = reinterpret_cast<texture_t**>(Z_Malloc (numtextures * sizeof(*textures), PU_STATIC, 0));
+    texturecolumnlump = reinterpret_cast<short**>(Z_Malloc (numtextures * sizeof(*texturecolumnlump), PU_STATIC, 0));
+    texturecolumnofs = reinterpret_cast<unsigned int**>(Z_Malloc (numtextures * sizeof(*texturecolumnofs), PU_STATIC, 0));
+    texturecolumnofs2 = reinterpret_cast<unsigned int**>(Z_Malloc (numtextures * sizeof(*texturecolumnofs2), PU_STATIC, 0));
+    texturecomposite = reinterpret_cast<byte**>(Z_Malloc (numtextures * sizeof(*texturecomposite), PU_STATIC, 0));
+    texturecomposite2 = reinterpret_cast<byte**>(Z_Malloc (numtextures * sizeof(*texturecomposite2), PU_STATIC, 0));
+    texturecompositesize = reinterpret_cast<int*>(Z_Malloc (numtextures * sizeof(*texturecompositesize), PU_STATIC, 0));
+    texturewidthmask = reinterpret_cast<int*>(Z_Malloc (numtextures * sizeof(*texturewidthmask), PU_STATIC, 0));
+    texturewidth = reinterpret_cast<int*>(Z_Malloc (numtextures * sizeof(*texturewidth), PU_STATIC, 0));
+    textureheight = reinterpret_cast<int*>(Z_Malloc (numtextures * sizeof(*textureheight), PU_STATIC, 0));
+    texturebrightmap = reinterpret_cast<byte**>(Z_Malloc (numtextures * sizeof(*texturebrightmap), PU_STATIC, 0));
 
     totalwidth = 0;
     
@@ -914,9 +914,9 @@ void R_InitTextures (void)
 	mtexture = (maptexture_t *) ( (byte *)maptex + offset);
 
 	texture = textures[i] =
-	    Z_Malloc (sizeof(texture_t)
+            reinterpret_cast<texture_t *>(Z_Malloc (sizeof(texture_t)
 		      + sizeof(texpatch_t)*(SHORT(mtexture->patchcount)-1),
-		      PU_STATIC, 0);
+		      PU_STATIC, 0));
 	
 	texture->width = SHORT(mtexture->width);
 	texture->height = SHORT(mtexture->height);
@@ -951,9 +951,9 @@ void R_InitTextures (void)
 		patch->patch = 0;
 	    }
 	}		
-	texturecolumnlump[i] = Z_Malloc (texture->width*sizeof(**texturecolumnlump), PU_STATIC,0);
-	texturecolumnofs[i] = Z_Malloc (texture->width*sizeof(**texturecolumnofs), PU_STATIC,0);
-	texturecolumnofs2[i] = Z_Malloc (texture->width*sizeof(**texturecolumnofs2), PU_STATIC,0);
+	texturecolumnlump[i] = reinterpret_cast<short*>(Z_Malloc (texture->width*sizeof(**texturecolumnlump), PU_STATIC,0));
+	texturecolumnofs[i] = reinterpret_cast<unsigned int*>(Z_Malloc (texture->width*sizeof(**texturecolumnofs), PU_STATIC,0));
+	texturecolumnofs2[i] = reinterpret_cast<unsigned int*>(Z_Malloc (texture->width*sizeof(**texturecolumnofs2), PU_STATIC,0));
 
 	j = 1;
 	while (j*2 <= texture->width)
@@ -982,7 +982,7 @@ void R_InitTextures (void)
 	R_GenerateLookup (i);
     
     // Create translation table for global animation.
-    texturetranslation = Z_Malloc ((numtextures+1)*sizeof(*texturetranslation), PU_STATIC, 0);
+    texturetranslation = reinterpret_cast<int*>(Z_Malloc ((numtextures+1)*sizeof(*texturetranslation), PU_STATIC, 0));
     
     for (i=0 ; i<numtextures ; i++)
 	texturetranslation[i] = i;
@@ -1004,7 +1004,7 @@ void R_InitFlats (void)
     numflats = lastflat - firstflat + 1;
 	
     // Create translation table for global animation.
-    flattranslation = Z_Malloc ((numflats+1)*sizeof(*flattranslation), PU_STATIC, 0);
+    flattranslation = reinterpret_cast<int*>(Z_Malloc ((numflats+1)*sizeof(*flattranslation), PU_STATIC, 0));
     
     for (i=0 ; i<numflats ; i++)
 	flattranslation[i] = i;
@@ -1026,16 +1026,16 @@ void R_InitSpriteLumps (void)
     lastspritelump = W_GetNumForName (DEH_String("S_END")) - 1;
     
     numspritelumps = lastspritelump - firstspritelump + 1;
-    spritewidth = Z_Malloc (numspritelumps*sizeof(*spritewidth), PU_STATIC, 0);
-    spriteoffset = Z_Malloc (numspritelumps*sizeof(*spriteoffset), PU_STATIC, 0);
-    spritetopoffset = Z_Malloc (numspritelumps*sizeof(*spritetopoffset), PU_STATIC, 0);
+    spritewidth = reinterpret_cast<int*>(Z_Malloc (numspritelumps*sizeof(*spritewidth), PU_STATIC, 0));
+    spriteoffset = reinterpret_cast<int*>(Z_Malloc (numspritelumps*sizeof(*spriteoffset), PU_STATIC, 0));
+    spritetopoffset = reinterpret_cast<int*>(Z_Malloc (numspritelumps*sizeof(*spritetopoffset), PU_STATIC, 0));
 	
     for (i=0 ; i< numspritelumps ; i++)
     {
 	if (!(i&63))
 	    printf (".");
 
-	patch = W_CacheLumpNum (firstspritelump+i, PU_CACHE);
+	patch =reinterpret_cast<patch_t *>( W_CacheLumpNum (firstspritelump+i, PU_CACHE));
 	spritewidth[i] = SHORT(patch->width)<<FRACBITS;
 	spriteoffset[i] = SHORT(patch->leftoffset)<<FRACBITS;
 	spritetopoffset[i] = SHORT(patch->topoffset)<<FRACBITS;
@@ -1060,14 +1060,14 @@ static void R_InitTranMap()
     if (lump != -1)
     {
 	// Set a pointer to the translucency filter maps.
-	tranmap = W_CacheLumpNum(lump, PU_STATIC);
+	tranmap = reinterpret_cast<byte*>(W_CacheLumpNum(lump, PU_STATIC));
 	// [crispy] loaded from a lump
 	printf(":");
     }
     else
     {
 	// Compose a default transparent filter map based on PLAYPAL.
-	unsigned char *playpal = W_CacheLumpName("PLAYPAL", PU_STATIC);
+	unsigned char *playpal = reinterpret_cast<byte*>(W_CacheLumpName("PLAYPAL", PU_STATIC));
 	FILE *cachefp;
 	char *fname = NULL;
 	extern char *configdir;
@@ -1077,7 +1077,7 @@ static void R_InitTranMap()
 	    unsigned char playpal[256*3]; // [crispy] a palette has 768 bytes!
 	} cache;
 
-	tranmap = Z_Malloc(256*256, PU_STATIC, 0);
+	tranmap = reinterpret_cast<byte*>(Z_Malloc(256*256, PU_STATIC, 0));
 	fname = M_StringJoin(configdir, "tranmap.dat", NULL);
 
 	// [crispy] open file readable
@@ -1174,7 +1174,7 @@ void R_InitColormaps (void)
     // Load in the light tables, 
     //  256 byte align tables.
     lump = W_GetNumForName(DEH_String("COLORMAP"));
-    colormaps = W_CacheLumpNum(lump, PU_STATIC);
+    colormaps = reinterpret_cast<lighttable_t *>(W_CacheLumpNum(lump, PU_STATIC));
 #else
 	byte *playpal;
 	int c, i, j = 0;
@@ -1245,13 +1245,13 @@ void R_InitColormaps (void)
 
     // [crispy] initialize color translation and color strings tables
     {
-	byte *playpal = W_CacheLumpName("PLAYPAL", PU_STATIC);
+	byte *playpal = reinterpret_cast<byte*>(W_CacheLumpName("PLAYPAL", PU_STATIC));
 	char c[3];
 	int i, j;
 	boolean keepgray = false;
 
 	if (!crstr)
-	    crstr = I_Realloc(NULL, CRMAX * sizeof(*crstr));
+	    crstr = reinterpret_cast<char**>(I_Realloc(NULL, CRMAX * sizeof(*crstr)));
 
 	// [crispy] check for status bar graphics replacements
 	i = W_CheckNumForName(DEH_String("sttnum0")); // [crispy] Status Bar '0'
@@ -1417,7 +1417,7 @@ void R_PrecacheLevel (void)
 	return;
     
     // Precache flats.
-    flatpresent = Z_Malloc(numflats, PU_STATIC, NULL);
+    flatpresent = reinterpret_cast<char*>(Z_Malloc(numflats, PU_STATIC, NULL));
     memset (flatpresent,0,numflats);	
 
     for (i=0 ; i<numsectors ; i++)
@@ -1441,7 +1441,7 @@ void R_PrecacheLevel (void)
     Z_Free(flatpresent);
     
     // Precache textures.
-    texturepresent = Z_Malloc(numtextures, PU_STATIC, NULL);
+    texturepresent = reinterpret_cast<char*>(Z_Malloc(numtextures, PU_STATIC, NULL));
     memset (texturepresent,0, numtextures);
 	
     for (i=0 ; i<numsides ; i++)
@@ -1481,7 +1481,7 @@ void R_PrecacheLevel (void)
     Z_Free(texturepresent);
     
     // Precache sprites.
-    spritepresent = Z_Malloc(numsprites, PU_STATIC, NULL);
+    spritepresent = reinterpret_cast<char*>(Z_Malloc(numsprites, PU_STATIC, NULL));
     memset (spritepresent,0, numsprites);
 	
     for (th = thinkercap.next ; th != &thinkercap ; th=th->next)

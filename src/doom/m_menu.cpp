@@ -239,7 +239,7 @@ static void M_DrawThermo(int x,int y,int thermWidth,int thermDot);
 static void M_WriteText(int x, int y, const char *string);
 int  M_StringWidth(const char *string); // [crispy] un-static
 static int  M_StringHeight(const char *string);
-static void M_StartMessage(const char *string, void *routine, boolean input);
+static void M_StartMessage(const char *string, void (*routine)(int), boolean input);
 static void M_ClearMenus (void);
 
 // [crispy] Crispness menu
@@ -828,7 +828,7 @@ void M_DrawLoad(void)
     int             i;
 	
     V_DrawPatchDirect(LoadDef_x, LoadDef_y,
-                      W_CacheLumpName(DEH_String("M_LOADG"), PU_CACHE));
+                      reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_LOADG"), PU_CACHE)));
 
     for (i = 0;i < load_end; i++)
     {
@@ -847,17 +847,17 @@ void M_DrawSaveLoadBorder(int x,int y)
     int             i;
 	
     V_DrawPatchDirect(x - 8, y + 7,
-                      W_CacheLumpName(DEH_String("M_LSLEFT"), PU_CACHE));
+                      reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_LSLEFT"), PU_CACHE)));
 	
     for (i = 0;i < 24;i++)
     {
 	V_DrawPatchDirect(x, y + 7,
-                          W_CacheLumpName(DEH_String("M_LSCNTR"), PU_CACHE));
+                      reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_LSCNTR"), PU_CACHE)));
 	x += 8;
     }
 
-    V_DrawPatchDirect(x, y + 7, 
-                      W_CacheLumpName(DEH_String("M_LSRGHT"), PU_CACHE));
+    V_DrawPatchDirect(x, y + 7,
+                      reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_LSRGHT"), PU_CACHE)));
 }
 
 
@@ -906,7 +906,7 @@ void M_DrawSave(void)
 {
     int             i;
 	
-    V_DrawPatchDirect(SaveDef_x, SaveDef_y, W_CacheLumpName(DEH_String("M_SAVEG"), PU_CACHE));
+    V_DrawPatchDirect(SaveDef_x, SaveDef_y, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_SAVEG"), PU_CACHE)));
     for (i = 0;i < load_end; i++)
     {
 	M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
@@ -1127,7 +1127,7 @@ void M_DrawReadThis1(void)
 {
     inhelpscreens = true;
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP2"), PU_CACHE), false);
+    V_DrawPatchFullScreen(reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("HELP2"), PU_CACHE)), false);
 }
 
 
@@ -1142,14 +1142,14 @@ void M_DrawReadThis2(void)
     // We only ever draw the second page if this is 
     // gameversion == exe_doom_1_9 and gamemode == registered
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP1"), PU_CACHE), false);
+    V_DrawPatchFullScreen(reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("HELP1"), PU_CACHE)), false);
 }
 
 void M_DrawReadThisCommercial(void)
 {
     inhelpscreens = true;
 
-    V_DrawPatchFullScreen(W_CacheLumpName(DEH_String("HELP"), PU_CACHE), false);
+    V_DrawPatchFullScreen(reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("HELP"), PU_CACHE)), false);
 }
 
 
@@ -1158,7 +1158,7 @@ void M_DrawReadThisCommercial(void)
 //
 void M_DrawSound(void)
 {
-    V_DrawPatchDirect (60, 38, W_CacheLumpName(DEH_String("M_SVOL"), PU_CACHE));
+    V_DrawPatchDirect (60, 38, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_SVOL"), PU_CACHE)));
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
 		 16,sfxVolume);
@@ -1218,7 +1218,7 @@ void M_DrawMainMenu(void)
     inhelpscreens = true;
 
     V_DrawPatchDirect(94, 2,
-                      W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE));
+                      reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_DOOM"), PU_CACHE)));
 }
 
 
@@ -1232,8 +1232,8 @@ void M_DrawNewGame(void)
     // [crispy] force status bar refresh
     inhelpscreens = true;
 
-    V_DrawPatchDirect(96, 14, W_CacheLumpName(DEH_String("M_NEWG"), PU_CACHE));
-    V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_SKILL"), PU_CACHE));
+    V_DrawPatchDirect(96, 14, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_NEWG"), PU_CACHE)));
+    V_DrawPatchDirect(54, 38, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_SKILL"), PU_CACHE)));
 }
 
 void M_NewGame(int choice)
@@ -1269,7 +1269,7 @@ void M_DrawEpisode(void)
     // [crispy] force status bar refresh
     inhelpscreens = true;
 
-    V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
+    V_DrawPatchDirect(54, 38, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE)));
 }
 
 void M_VerifyNightmare(int key)
@@ -1277,7 +1277,7 @@ void M_VerifyNightmare(int key)
     if (key != key_menu_confirm)
 	return;
 		
-    G_DeferedInitNew(nightmare,epi+1,1);
+    G_DeferedInitNew(static_cast<skill_t >(nightmare),epi+1,1);
     M_ClearMenus ();
 }
 
@@ -1289,7 +1289,7 @@ void M_ChooseSkill(int choice)
 	return;
     }
 	
-    G_DeferedInitNew(choice,epi+1,1);
+    G_DeferedInitNew(static_cast<skill_t>(choice),epi+1,1);
     M_ClearMenus ();
 }
 
@@ -1317,14 +1317,14 @@ static const char *msgNames[2] = {"M_MSGOFF","M_MSGON"};
 
 void M_DrawOptions(void)
 {
-    V_DrawPatchDirect(108, 15, W_CacheLumpName(DEH_String("M_OPTTTL"),
-                                               PU_CACHE));
+    V_DrawPatchDirect(108, 15, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_OPTTTL"),
+                                               PU_CACHE)));
 	
     if (OptionsDef.lumps_missing == -1)
     {
     V_DrawPatchDirect(OptionsDef.x + 175, OptionsDef.y + LINEHEIGHT * detail,
-		      W_CacheLumpName(DEH_String(detailNames[detailLevel]),
-			              PU_CACHE));
+                      reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String(detailNames[detailLevel]),
+			              PU_CACHE)));
     }
     else
     if (OptionsDef.lumps_missing > 0)
@@ -1337,8 +1337,8 @@ void M_DrawOptions(void)
     if (OptionsDef.lumps_missing == -1)
     {
     V_DrawPatchDirect(OptionsDef.x + 120, OptionsDef.y + LINEHEIGHT * messages,
-                      W_CacheLumpName(DEH_String(msgNames[showMessages]),
-                                      PU_CACHE));
+                      reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String(msgNames[showMessages]),
+                                      PU_CACHE)));
     }
     else
     if (OptionsDef.lumps_missing > 0)
@@ -1363,7 +1363,7 @@ static void M_DrawMouse(void)
 {
     char mouse_menu_text[48];
 
-    V_DrawPatchDirect (60, LoadDef_y, W_CacheLumpName(DEH_String("M_MSENS"), PU_CACHE));
+    V_DrawPatchDirect (60, LoadDef_y, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_MSENS"), PU_CACHE)));
 
     M_WriteText(MouseDef.x, MouseDef.y + LINEHEIGHT * mouse_horiz + 6,
                 "HORIZONTAL: TURN");
@@ -1904,14 +1904,14 @@ M_DrawThermo
     }
 
     xx = x;
-    V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERML"), PU_CACHE));
+    V_DrawPatchDirect(xx, y, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_THERML"), PU_CACHE)));
     xx += 8;
     for (i=0;i<thermWidth;i++)
     {
-	V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERMM"), PU_CACHE));
+	V_DrawPatchDirect(xx, y, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_THERMM"), PU_CACHE)));
 	xx += 8;
     }
-    V_DrawPatchDirect(xx, y, W_CacheLumpName(DEH_String("M_THERMR"), PU_CACHE));
+    V_DrawPatchDirect(xx, y, reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_THERMR"), PU_CACHE)));
 
     M_snprintf(num, 4, "%3d", thermDot);
     M_WriteText(xx + 8, y + 3, num);
@@ -1924,7 +1924,7 @@ M_DrawThermo
     }
 
     V_DrawPatchDirect((x + 8) + thermDot * 8, y,
-		      W_CacheLumpName(DEH_String("M_THERMO"), PU_CACHE));
+                      reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_THERMO"), PU_CACHE)));
 
     dp_translation = NULL;
 }
@@ -1933,7 +1933,7 @@ M_DrawThermo
 void
 M_StartMessage
 ( const char	*string,
-  void*		routine,
+  void (*routine) (int),
   boolean	input )
 {
     messageLastMenuActive = menuactive;
@@ -2604,7 +2604,7 @@ boolean M_Responder (event_t* ev)
 		usegamma = 0;
 	    players[consoleplayer].message = DEH_String(gammamsg[usegamma]);
 #ifndef CRISPY_TRUECOLOR
-            I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
+            I_SetPalette (reinterpret_cast<byte *>(W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE)));
 #else
             {
 		extern void R_InitColormaps (void);
@@ -2964,7 +2964,7 @@ void M_Drawer (void)
 	if (name[0] && (W_CheckNumForName(name) > 0 || alttext))
 	{
 	    if (W_CheckNumForName(name) > 0 && currentMenu->lumps_missing == -1)
-	    V_DrawPatchDirect (x, y, W_CacheLumpName(name, PU_CACHE));
+	    V_DrawPatchDirect (x, y, reinterpret_cast<patch_t*>(W_CacheLumpName(name, PU_CACHE)));
 	    else if (alttext)
 		M_WriteText(x, y+8-(M_StringHeight(alttext)/2), alttext);
 	}
@@ -2982,8 +2982,8 @@ void M_Drawer (void)
     }
     else
     V_DrawPatchDirect(x + SKULLXOFF, currentMenu->y - 5 + itemOn*LINEHEIGHT,
-		      W_CacheLumpName(DEH_String(skullName[whichSkull]),
-				      PU_CACHE));
+                      reinterpret_cast<patch_t *>(W_CacheLumpName(DEH_String(skullName[whichSkull]),
+				      PU_CACHE)));
 }
 
 
@@ -3131,8 +3131,8 @@ void M_Init (void)
                 {
                     const patch_t *pi, *pj;
 
-                    pi = W_CacheLumpNum(i, PU_CACHE);
-                    pj = W_CacheLumpNum(j, PU_CACHE);
+                    pi = reinterpret_cast<patch_t *>(W_CacheLumpNum(i, PU_CACHE));
+                    pj = reinterpret_cast<patch_t *>(W_CacheLumpNum(j, PU_CACHE));
 
                     // ... and if the patch width for "Hell on Earth"
                     //     is longer than "No Rest for the Living"
@@ -3170,9 +3170,9 @@ void M_Init (void)
 	const patch_t *patchl, *patchs, *patchm;
 	short captionheight, vstep;
 
-	patchl = W_CacheLumpName(DEH_String("M_LOADG"), PU_CACHE);
-	patchs = W_CacheLumpName(DEH_String("M_SAVEG"), PU_CACHE);
-	patchm = W_CacheLumpName(DEH_String("M_LSLEFT"), PU_CACHE);
+	patchl = reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_LOADG"), PU_CACHE));
+	patchs = reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_SAVEG"), PU_CACHE));
+	patchm = reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("M_LSLEFT"), PU_CACHE));
 
 	LoadDef_x = (ORIGWIDTH - SHORT(patchl->width)) / 2 + SHORT(patchl->leftoffset);
 	SaveDef_x = (ORIGWIDTH - SHORT(patchs->width)) / 2 + SHORT(patchs->leftoffset);
@@ -3263,12 +3263,12 @@ void M_ForceLoadGame()
 	             "to restore ", crstr[CR_GOLD], savemaplumpinfo->name, crstr[CR_NONE], " .\n\n",
 	             "Continue to restore from\n",
 	             crstr[CR_GOLD], W_WadNameForLump(savemaplumpinfo), crstr[CR_NONE], " ?\n\n",
-	             PRESSYN, NULL) :
+	             "press y or n.", NULL) :
 	M_StringJoin("This savegame requires the file\n",
 	             crstr[CR_GOLD], savewadfilename, crstr[CR_NONE], "\n",
 	             "to restore a map that is\n",
 	             "currently not available!\n\n",
-	             PRESSKEY, NULL) ;
+                 "press a key.", NULL) ;
 
 	M_StartMessage(savegwarning, M_ForceLoadGameResponse, savemaplumpinfo != NULL);
 	messageToPrint = 2;
@@ -3295,7 +3295,7 @@ void M_ConfirmDeleteGame ()
 	savegwarning =
 	M_StringJoin("delete savegame\n\n",
 	             crstr[CR_GOLD], savegamestrings[itemOn], crstr[CR_NONE], " ?\n\n",
-	             PRESSYN, NULL);
+	             "press y or n.", NULL);
 
 	M_StartMessage(savegwarning, M_ConfirmDeleteGameResponse, true);
 	messageToPrint = 2;
@@ -3305,7 +3305,7 @@ void M_ConfirmDeleteGame ()
 // [crispy] indicate game version mismatch
 void M_LoadGameVerMismatch ()
 {
-	M_StartMessage("Game Version Mismatch\n\n"PRESSKEY, NULL, false);
+	M_StartMessage("Game Version Mismatch\n\npress a key.", NULL, false);
 	messageToPrint = 2;
 	S_StartSound(NULL,sfx_swtchn);
 }

@@ -170,10 +170,10 @@ static void *ReadByteSequence(unsigned int num_bytes, FILE *stream)
     unsigned int i;
     byte *result;
 
-    // Allocate a buffer. Allocate one extra byte, as malloc(0) is
+    // Allocate a buffer. Allocate one extra byte, as reinterpret_cast<*>(malloc(0)) is
     // non-portable.
 
-    result = malloc(num_bytes + 1);
+    result = reinterpret_cast<byte*>(malloc(num_bytes + 1));
 
     if (result == NULL)
     {
@@ -209,7 +209,7 @@ static boolean ReadChannelEvent(midi_event_t *event,
 
     // Set basics:
 
-    event->event_type = event_type & 0xf0;
+    event->event_type = static_cast<midi_event_type_t>(event_type & 0xf0);
     event->data.channel.channel = event_type & 0x0f;
 
     // Read parameters:
@@ -245,7 +245,7 @@ static boolean ReadChannelEvent(midi_event_t *event,
 static boolean ReadSysExEvent(midi_event_t *event, int event_type,
                               FILE *stream)
 {
-    event->event_type = event_type;
+    event->event_type = static_cast<midi_event_type_t >(event_type);
 
     if (!ReadVariableLength(&event->data.sysex.length, stream))
     {
@@ -256,7 +256,7 @@ static boolean ReadSysExEvent(midi_event_t *event, int event_type,
 
     // Read the byte sequence:
 
-    event->data.sysex.data = ReadByteSequence(event->data.sysex.length, stream);
+    event->data.sysex.data = reinterpret_cast<byte*>(ReadByteSequence(event->data.sysex.length, stream));
 
     if (event->data.sysex.data == NULL)
     {
@@ -296,7 +296,7 @@ static boolean ReadMetaEvent(midi_event_t *event, FILE *stream)
 
     // Read the byte sequence:
 
-    event->data.meta.data = ReadByteSequence(event->data.meta.length, stream);
+    event->data.meta.data = reinterpret_cast<byte*>(ReadByteSequence(event->data.meta.length, stream));
 
     if (event->data.meta.data == NULL)
     {
@@ -458,8 +458,8 @@ static boolean ReadTrack(midi_track_t *track, FILE *stream)
     {
         // Resize the track slightly larger to hold another event:
 
-        new_events = I_Realloc(track->events, 
-                             sizeof(midi_event_t) * (track->num_events + 1));
+        new_events = reinterpret_cast<midi_event_t *>(I_Realloc(track->events,
+                             sizeof(midi_event_t) * (track->num_events + 1)));
         track->events = new_events;
 
         // Read the next event:
@@ -504,7 +504,7 @@ static boolean ReadAllTracks(midi_file_t *file, FILE *stream)
 
     // Allocate list of tracks and read each track:
 
-    file->tracks = malloc(sizeof(midi_track_t) * file->num_tracks);
+    file->tracks = reinterpret_cast<midi_track_t *>(malloc(sizeof(midi_track_t) * file->num_tracks));
 
     if (file->tracks == NULL)
     {
@@ -585,7 +585,7 @@ midi_file_t *MIDI_LoadFile(char *filename)
     midi_file_t *file;
     FILE *stream;
 
-    file = malloc(sizeof(midi_file_t));
+    file = reinterpret_cast<midi_file_t *>(malloc(sizeof(midi_file_t)));
 
     if (file == NULL)
     {
@@ -646,7 +646,7 @@ midi_track_iter_t *MIDI_IterateTrack(midi_file_t *file, unsigned int track)
 
     assert(track < file->num_tracks);
 
-    iter = malloc(sizeof(*iter));
+    iter = reinterpret_cast<midi_track_iter_t *>(malloc(sizeof(*iter)));
     iter->track = &file->tracks[track];
     iter->position = 0;
 

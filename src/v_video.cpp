@@ -26,23 +26,23 @@
 #include <string.h>
 #include <math.h>
 
-#include "i_system.h"
+#include "i_system.hpp"
 
 #include "doomtype.hpp"
 
-#include "deh_str.h"
-#include "i_input.h"
-#include "i_swap.h"
-#include "i_video.h"
-#include "m_bbox.h"
-#include "m_misc.h"
+#include "deh_str.hpp"
+#include "i_input.hpp"
+#include "i_swap.hpp"
+#include "i_video.hpp"
+#include "m_bbox.hpp"
+#include "m_misc.hpp"
 #ifdef CRISPY_TRUECOLOR
 #include "v_trans.h"
 #endif
-#include "v_video.h"
-#include "w_wad.h"
-#include "z_zone.h"
-#include "crispy.h"
+#include "v_video.hpp"
+#include "w_wad.hpp"
+#include "z_zone.hpp"
+#include "crispy.hpp"
 
 #include "config.h"
 #ifdef HAVE_LIBPNG
@@ -683,7 +683,7 @@ void V_DrawShadowedPatch(int x, int y, patch_t *patch)
 
 void V_LoadTintTable(void)
 {
-    tinttable = W_CacheLumpName("TINTTAB", PU_STATIC);
+    tinttable = reinterpret_cast<byte*>(W_CacheLumpName("TINTTAB", PU_STATIC));
 }
 
 //
@@ -694,7 +694,7 @@ void V_LoadTintTable(void)
 
 void V_LoadXlaTable(void)
 {
-    xlatab = W_CacheLumpName("XLATAB", PU_STATIC);
+    xlatab = reinterpret_cast<byte*>(W_CacheLumpName("XLATAB", PU_STATIC));
 }
 
 //
@@ -924,7 +924,7 @@ void WritePCXfile(char *filename, pixel_t *data,
     pcx_t*	pcx;
     byte*	pack;
 	
-    pcx = Z_Malloc (width*height*2+1000, PU_STATIC, NULL);
+    pcx = reinterpret_cast<pcx_t *>(Z_Malloc (width*height*2+1000, PU_STATIC, NULL));
 
     pcx->manufacturer = 0x0a;		// PCX id
     pcx->version = 5;			// 256 color
@@ -1054,7 +1054,7 @@ void WritePNGfile(char *filename, pixel_t *data,
                  8, PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
                  PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
-    pcolor = malloc(sizeof(*pcolor) * 256);
+    pcolor = reinterpret_cast<*>(malloc(sizeof(*pcolor) * 256));
     if (!pcolor)
     {
         fclose(handle);
@@ -1076,7 +1076,7 @@ void WritePNGfile(char *filename, pixel_t *data,
     png_write_info(ppng, pinfo);
 
 /*
-    rowbuf = malloc(width);
+    rowbuf = reinterpret_cast<*>(malloc(width));
 
     if (rowbuf)
     {
@@ -1173,7 +1173,7 @@ void V_ScreenShot(const char *format)
     // save the pcx file
     WritePCXfile(lbmname, I_VideoBuffer,
                  SCREENWIDTH, SCREENHEIGHT,
-                 W_CacheLumpName (DEH_String("PLAYPAL"), PU_CACHE));
+                 reinterpret_cast<byte*>(W_CacheLumpName (DEH_String("PLAYPAL"), PU_CACHE)));
     }
 }
 

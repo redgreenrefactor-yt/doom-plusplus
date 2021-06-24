@@ -15,7 +15,7 @@
 // Text mode emulation in SDL
 //
 
-#include SDL.h
+#include "SDL.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -300,7 +300,7 @@ int TXT_Init(void)
     SDL_SetPaletteColors(screenbuffer->format->palette, ega_colors, 0, 16);
     SDL_UnlockSurface(screenbuffer);
 
-    screendata = malloc(TXT_SCREEN_W * TXT_SCREEN_H * 2);
+    screendata = reinterpret_cast<unsigned char*>(malloc(TXT_SCREEN_W * TXT_SCREEN_H * 2));
     memset(screendata, 0, TXT_SCREEN_W * TXT_SCREEN_H * 2);
 
     return 1;
@@ -317,7 +317,7 @@ void TXT_Shutdown(void)
 
 void TXT_SetColor(txt_color_t color, int r, int g, int b)
 {
-    SDL_Color c = {r, g, b, 0xff};
+    SDL_Color c {static_cast<uint8_t >(r), static_cast<uint8_t >(g), static_cast<uint8_t >(b), 0xff};
 
     SDL_LockSurface(screenbuffer);
     SDL_SetPaletteColors(screenbuffer->format->palette, &c, color, 1);
@@ -763,7 +763,7 @@ static const char *NameForKey(int key)
     {
         if (scancode_translate_table[i] == key)
         {
-            result = SDL_GetKeyName(SDL_GetKeyFromScancode(i));
+            result = SDL_GetKeyName(SDL_GetKeyFromScancode(static_cast<SDL_Scancode >(i)));
             if (TXT_UTF8_Strlen(result) > 6 || !PrintableName(result))
             {
                 break;

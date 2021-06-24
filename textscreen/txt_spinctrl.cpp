@@ -319,7 +319,7 @@ static int TXT_SpinControlKeyPress(TXT_UNCAST_ARG(spincontrol), int key)
 
             return 1;
         }
-        
+
         if (key == KEY_RIGHTARROW)
         {
             switch (spincontrol->type)
@@ -383,11 +383,11 @@ static txt_spincontrol_t *TXT_BaseSpinControl(void)
 {
     txt_spincontrol_t *spincontrol;
 
-    spincontrol = malloc(sizeof(txt_spincontrol_t));
+    spincontrol = reinterpret_cast<txt_spincontrol_t*>(malloc(sizeof(txt_spincontrol_t)));
 
     TXT_InitWidget(spincontrol, &txt_spincontrol_class);
     spincontrol->buffer_len = 25;
-    spincontrol->buffer = malloc(spincontrol->buffer_len);
+    spincontrol->buffer = reinterpret_cast<char*>(malloc(spincontrol->buffer_len));
     TXT_StringCopy(spincontrol->buffer, "", spincontrol->buffer_len);
     spincontrol->editing = 0;
 
@@ -400,7 +400,8 @@ txt_spincontrol_t *TXT_NewSpinControl(int *value, int min, int max)
 
     spincontrol = TXT_BaseSpinControl();
     spincontrol->type = TXT_SPINCONTROL_INT;
-    spincontrol->value = (void *) value;
+    int** val = reinterpret_cast<int**>(&spincontrol->value);
+    *val = value;
     spincontrol->min.i = min;
     spincontrol->max.i = max;
     spincontrol->step.i = 1;
@@ -414,7 +415,8 @@ txt_spincontrol_t *TXT_NewFloatSpinControl(float *value, float min, float max)
 
     spincontrol = TXT_BaseSpinControl();
     spincontrol->type = TXT_SPINCONTROL_FLOAT;
-    spincontrol->value = (void *) value;
+    float** val = reinterpret_cast<float**>(&spincontrol->value);
+    *val = value;
     spincontrol->min.f = min;
     spincontrol->max.f = max;
     spincontrol->step.f = 0.1f;

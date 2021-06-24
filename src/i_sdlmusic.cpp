@@ -56,7 +56,7 @@ static boolean sdl_was_initialized = false;
 static boolean musicpaused = false;
 static int current_music_volume;
 
-char *timidity_cfg_path = "";
+const char *timidity_cfg_path = "";
 
 static char *temp_timidity_cfg = NULL;
 
@@ -120,7 +120,7 @@ void I_InitTimidityConfig(void)
         // timidity_cfg_path or GUS mode), then disable Fluidsynth, because
         // SDL_mixer considers Fluidsynth a higher priority than Timidity and
         // therefore can end up circumventing Timidity entirely.
-        putenv("SDL_MIXER_DISABLE_FLUIDSYNTH=1");
+        putenv(const_cast<char*>("SDL_MIXER_DISABLE_FLUIDSYNTH=1"));
     }
     else
     {
@@ -431,7 +431,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
     {
 	// Assume a MUS file and try to convert
 
-        ConvertMus(data, len, filename);
+        ConvertMus(reinterpret_cast<byte*>(data), len, filename);
     }
 
     // Load the MIDI. In an ideal world we'd be using Mix_LoadMUS_RW()

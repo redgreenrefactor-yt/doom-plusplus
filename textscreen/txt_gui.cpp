@@ -420,7 +420,7 @@ void TXT_InitClipArea(void)
 {
     if (cliparea == NULL)
     {
-        cliparea = malloc(sizeof(txt_cliparea_t));
+        cliparea = reinterpret_cast<txt_cliparea_t*>(malloc(sizeof(txt_cliparea_t)));
         cliparea->x1 = 0;
         cliparea->x2 = TXT_SCREEN_W;
         cliparea->y1 = 0;
@@ -433,7 +433,7 @@ void TXT_PushClipArea(int x1, int x2, int y1, int y2)
 {
     txt_cliparea_t *newarea;
 
-    newarea = malloc(sizeof(txt_cliparea_t));
+    newarea = reinterpret_cast<txt_cliparea_t*>(malloc(sizeof(txt_cliparea_t)));
 
     // Set the new clip area to the intersection of the old
     // area and the new one.

@@ -161,7 +161,7 @@ void P_InitPicAnims (void)
 
     if (from_lump)
     {
-	animdefs = W_CacheLumpName("ANIMATED", PU_STATIC);
+	animdefs = reinterpret_cast<animdef_t *>(W_CacheLumpName("ANIMATED", PU_STATIC));
     }
     else
     {
@@ -178,7 +178,7 @@ void P_InitPicAnims (void)
 	if (lastanim >= anims + maxanims)
 	{
 	    size_t newmax = maxanims ? 2 * maxanims : MAXANIMS;
-	    anims = I_Realloc(anims, newmax * sizeof(*anims));
+	    anims = reinterpret_cast<anim_t *>(I_Realloc(anims, newmax * sizeof(*anims)));
 	    lastanim = anims + maxanims;
 	    maxanims = newmax;
 	}
@@ -399,7 +399,7 @@ P_FindNextHighestFloor
 	{
 	    heightlist_size = heightlist_size ? 2 * heightlist_size : MAX_ADJOINING_SECTORS;
 	} while (sec->linecount > heightlist_size);
-	heightlist = I_Realloc(heightlist, heightlist_size * sizeof(*heightlist));
+	heightlist = reinterpret_cast<fixed_t *>(I_Realloc(heightlist, heightlist_size * sizeof(*heightlist)));
     }
 
     for (i=0, h=0; i < sec->linecount; i++)
@@ -1182,7 +1182,7 @@ void P_PlayerInSpecialSector (player_t* player)
 	    sfx_id = I_GetSfxLumpNum(&S_sfx[sfx_secret]) != -1 ? sfx_secret :
 	             I_GetSfxLumpNum(&S_sfx[sfx_itmbk]) != -1 ? sfx_itmbk : -1;
 
-	    player->centermessage = (crispy->secretmessage == SECRETMESSAGE_COUNT) ? str_count : HUSTR_SECRETFOUND;
+	    player->centermessage = (crispy->secretmessage == SECRETMESSAGE_COUNT) ? str_count : const_cast<char*>(HUSTR_SECRETFOUND);
 	    if (sfx_id != -1)
 		S_StartSound(NULL, sfx_id);
 	}
@@ -1518,7 +1518,7 @@ int EV_DoDonut(line_t*	line)
             }
 
 	    //	Spawn rising slime
-	    floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+	    floor = reinterpret_cast<floormove_t *>(Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0));
 	    P_AddThinker (&floor->thinker);
 	    s2->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
@@ -1532,7 +1532,7 @@ int EV_DoDonut(line_t*	line)
 	    floor->floordestheight = s3_floorheight;
 	    
 	    //	Spawn lowering donut-hole
-	    floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+	    floor = reinterpret_cast<floormove_t *>(Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0));
 	    P_AddThinker (&floor->thinker);
 	    s1->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;

@@ -61,7 +61,7 @@ txt_strut_t *TXT_NewStrut(int width, int height)
 {
     txt_strut_t *strut;
 
-    strut = malloc(sizeof(txt_strut_t));
+    strut = reinterpret_cast<txt_strut_t*>(malloc(sizeof(txt_strut_t)));
 
     TXT_InitWidget(strut, &txt_strut_class);
     strut->width = width;

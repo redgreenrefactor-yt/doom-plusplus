@@ -168,7 +168,7 @@ txt_mouse_input_t *TXT_NewMouseInput(int *variable)
 {
     txt_mouse_input_t *mouse_input;
 
-    mouse_input = malloc(sizeof(txt_mouse_input_t));
+    mouse_input = reinterpret_cast<*>(malloc(sizeof(txt_mouse_input_t)));
 
     TXT_InitWidget(mouse_input, &txt_mouse_input_class);
     mouse_input->variable = variable;

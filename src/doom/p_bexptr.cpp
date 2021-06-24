@@ -22,8 +22,8 @@
 #include "m_random.hpp"
 #include "s_sound.hpp"
 
-extern void A_Explode();
-extern void A_FaceTarget();
+extern void A_Explode(mobj_t*);
+extern void A_FaceTarget(mobj_t*);
 
 extern boolean P_CheckMeleeRange (mobj_t *actor);
 extern void P_Thrust (player_t* player, angle_t angle, fixed_t move);
@@ -109,7 +109,7 @@ void A_Spawn(mobj_t *mo)
     {
 /*    mobj_t *newmobj = */ P_SpawnMobj(mo->x, mo->y,
 				    (mo->state->misc2 << FRACBITS) + mo->z,
-				    mo->state->misc1 - 1);
+				    static_cast<mobjtype_t >(mo->state->misc1 - 1));
 //    newmobj->flags = (newmobj->flags & ~MF_FRIEND) | (mo->flags & MF_FRIEND);
 
     }
@@ -147,7 +147,7 @@ void A_RandomJump(mobj_t *mo, player_t *player, pspdef_t *psp)
 		{
 			extern void P_SetPsprite (player_t *player, int position, statenum_t stnum);
 
-			P_SetPsprite(player, psp - &player->psprites[0], psp->state->misc1);
+			P_SetPsprite(player, psp - &player->psprites[0], static_cast<statenum_t>(psp->state->misc1));
 		}
 	}
 	else
@@ -156,7 +156,7 @@ void A_RandomJump(mobj_t *mo, player_t *player, pspdef_t *psp)
 	{
 		if (Crispy_Random() < mo->state->misc2)
 		{
-			P_SetMobjState(mo, mo->state->misc1);
+			P_SetMobjState(mo, static_cast<statenum_t >(mo->state->misc1));
 		}
 	}
 }
@@ -246,7 +246,7 @@ void A_FireOldBFG(mobj_t *mobj, player_t *player, pspdef_t *psp)
 
       th = P_SpawnMobj(mo->x, mo->y,
 		       mo->z + 62*FRACUNIT - player->psprites[ps_weapon].sy,
-		       type);
+		       static_cast<mobjtype_t >(type));
       th->target = mo; // P_SetTarget(&th->target, mo);
       th->angle = an1;
       th->momx = finecosine[an1>>ANGLETOFINESHIFT] * 25;

@@ -103,7 +103,7 @@ txt_button_t *TXT_NewButton(const char *label)
 {
     txt_button_t *button;
 
-    button = malloc(sizeof(txt_button_t));
+    button = reinterpret_cast<txt_button_t*>(malloc(sizeof(txt_button_t)));
 
     TXT_InitWidget(button, &txt_button_class);
     button->label = strdup(label);

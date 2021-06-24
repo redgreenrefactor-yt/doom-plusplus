@@ -176,7 +176,7 @@ boolean D_Display (void)
     static  boolean		menuactivestate = false;
     static  boolean		inhelpscreensstate = false;
     static  boolean		fullscreen = false;
-    static  gamestate_t		oldgamestate = -1;
+    static  gamestate_t		oldgamestate = static_cast<gamestate_t >(-1);
     static  int			borderdrawcount;
     int				y;
     boolean			wipe;
@@ -188,7 +188,7 @@ boolean D_Display (void)
     if (setsizeneeded)
     {
 	R_ExecuteSetViewSize ();
-	oldgamestate = -1;                      // force background redraw
+	oldgamestate = static_cast<gamestate_t >(-1);                      // force background redraw
 	borderdrawcount = 3;
     }
 
@@ -258,7 +258,7 @@ boolean D_Display (void)
     // clean up border stuff
     if (gamestate != oldgamestate && gamestate != GS_LEVEL)
 #ifndef CRISPY_TRUECOLOR
-	I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
+	I_SetPalette (reinterpret_cast<byte*>(W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE)));
 #else
 	I_SetPalette (0);
 #endif
@@ -321,7 +321,7 @@ boolean D_Display (void)
 	else
 	    y = (viewwindowy >> crispy->hires)+4;
 	V_DrawPatchDirect((viewwindowx >> crispy->hires) + ((scaledviewwidth >> crispy->hires) - 68) / 2 - WIDESCREENDELTA, y,
-                          W_CacheLumpName (DEH_String("M_PAUSE"), PU_CACHE));
+                      reinterpret_cast<patch_t*>(W_CacheLumpName (DEH_String("M_PAUSE"), PU_CACHE)));
     }
 
 
@@ -625,7 +625,7 @@ void D_PageTicker (void)
 //
 void D_PageDrawer (void)
 {
-    V_DrawPatchFullScreen (W_CacheLumpName(pagename, PU_CACHE), crispy->fliplevels);
+    V_DrawPatchFullScreen (reinterpret_cast<patch_t*>(W_CacheLumpName(pagename, PU_CACHE)), crispy->fliplevels);
 }
 
 
@@ -819,7 +819,7 @@ static char *GetGameName(const char *gamename)
             // We also need to cut off spaces to get the basic name
 
             gamename_size = strlen(deh_sub) + 10;
-            deh_gamename = malloc(gamename_size);
+            deh_gamename = reinterpret_cast<char*>(malloc(gamename_size));
             if (deh_gamename == NULL)
             {
                 I_Error("GetGameName: Failed to allocate new string");
@@ -862,7 +862,7 @@ static void SetMissionForPackName(const char *pack_name)
     {
         if (!strcasecmp(pack_name, packs[i].name))
         {
-            gamemission = packs[i].mission;
+            gamemission = static_cast<GameMission_t >(packs[i].mission);
             return;
         }
     }
@@ -1109,7 +1109,7 @@ static struct
     {"Final Doom",           "final",      exe_final},
     {"Final Doom (alt)",     "final2",     exe_final2},
     {"Chex Quest",           "chex",       exe_chex},
-    { NULL,                  NULL,         0},
+    { NULL,                  NULL,         static_cast<GameVersion_t>(0)},
 };
 
 // Initialize the game version
@@ -1186,7 +1186,7 @@ static void InitGameVersion(void)
                 M_snprintf(demolumpname, 6, "demo%i", i);
                 if (W_CheckNumForName(demolumpname) > 0)
                 {
-                    demolump = W_CacheLumpName(demolumpname, PU_STATIC);
+                    demolump = reinterpret_cast<byte*>(W_CacheLumpName(demolumpname, PU_STATIC));
                     demoversion = demolump[0];
                     W_ReleaseLumpName(demolumpname);
                     status = true;
@@ -1291,7 +1291,7 @@ static void D_Endoom(void)
         return;
     }
 
-    endoom = W_CacheLumpName(DEH_String("ENDOOM"), PU_STATIC);
+    endoom = reinterpret_cast<byte*>(W_CacheLumpName(DEH_String("ENDOOM"), PU_STATIC));
 
     I_Endoom(endoom);
 }
@@ -1975,7 +1975,7 @@ void D_DoomMain (void)
     {
 	// These are the lumps that will be checked in IWAD,
 	// if any one is not present, execution will be aborted.
-	char name[23][8]=
+	char name[23][9]=
 	{
 	    "e2m1","e2m2","e2m3","e2m4","e2m5","e2m6","e2m7","e2m8","e2m9",
 	    "e3m1","e3m3","e3m3","e3m4","e3m5","e3m6","e3m7","e3m8","e3m9",
@@ -2077,7 +2077,7 @@ void D_DoomMain (void)
 
     if (p)
     {
-	startskill = myargv[p+1][0]-'1';
+	startskill = static_cast<skill_t>(myargv[p+1][0]-'1');
 	autostart = true;
     }
 

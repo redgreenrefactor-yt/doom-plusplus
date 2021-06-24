@@ -1894,7 +1894,7 @@ static void WI_loadCallback(const char *name, patch_t **variable)
 {
   // [crispy] prevent crashes with maps without map title graphics lump
   if (W_CheckNumForName(name) != -1)
-    *variable = W_CacheLumpName(name, PU_STATIC);
+    *variable = reinterpret_cast<patch_t*>(W_CacheLumpName(name, PU_STATIC));
   else
     *variable = NULL;
 }
@@ -1923,10 +1923,10 @@ void WI_loadData(void)
     // them with the status bar code
 
     // your face
-    star = W_CacheLumpName(DEH_String("STFST01"), PU_STATIC);
+    star = reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("STFST01"), PU_STATIC));
 
     // dead face
-    bstar = W_CacheLumpName(DEH_String("STFDEAD0"), PU_STATIC);
+    bstar = reinterpret_cast<patch_t*>(W_CacheLumpName(DEH_String("STFDEAD0"), PU_STATIC));
 }
 
 static void WI_unloadCallback(const char *name, patch_t **variable)

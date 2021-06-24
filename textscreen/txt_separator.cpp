@@ -102,7 +102,7 @@ txt_separator_t *TXT_NewSeparator(const char *label)
 {
     txt_separator_t *separator;
 
-    separator = malloc(sizeof(txt_separator_t));
+    separator = reinterpret_cast<txt_separator_t*>(malloc(sizeof(txt_separator_t)));
 
     TXT_InitWidget(separator, &txt_separator_class);
 

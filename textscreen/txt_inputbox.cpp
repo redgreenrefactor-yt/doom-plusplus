@@ -320,7 +320,7 @@ static txt_inputbox_t *NewInputBox(txt_widget_class_t *widget_class,
 {
     txt_inputbox_t *inputbox;
 
-    inputbox = malloc(sizeof(txt_inputbox_t));
+    inputbox = reinterpret_cast<txt_inputbox_t*>(malloc(sizeof(txt_inputbox_t)));
 
     TXT_InitWidget(inputbox, widget_class);
     inputbox->value = value;
@@ -329,7 +329,7 @@ static txt_inputbox_t *NewInputBox(txt_widget_class_t *widget_class,
     // but for a UTF-8 string, each character can take up to four
     // characters.
     inputbox->buffer_len = size * 4 + 1;
-    inputbox->buffer = malloc(inputbox->buffer_len);
+    inputbox->buffer = reinterpret_cast<char*>(malloc(inputbox->buffer_len));
     inputbox->editing = 0;
 
     return inputbox;
