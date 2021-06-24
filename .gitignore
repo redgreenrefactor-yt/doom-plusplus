@@ -28,6 +28,8 @@ DOOM*.pcx
 HTIC*.pcx
 HEXEN*.pcx
 STRIFE*.pcx
+cmake-build-*
+.idea
 
 # CMake-specific ignores
 /.vs
