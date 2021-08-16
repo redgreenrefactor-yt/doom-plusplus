@@ -15,8 +15,10 @@
 //	System interface for PC speaker sound.
 //
 
+extern "C"
+{
 #include "SDL.h"
-#include <string.h>
+}
 
 #include "doomtype.hpp"
 
@@ -26,7 +28,9 @@
 #include "w_wad.hpp"
 #include "z_zone.hpp"
 
+extern "C" {
 #include "pcsound.h"
+}
 
 #define TIMER_FREQ 1193181 /* hz */
 

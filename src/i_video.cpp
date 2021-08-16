@@ -121,11 +121,11 @@ int png_screenshots = 1; // [crispy]
 
 // SDL video driver name
 
-char *video_driver = "";
+const char *video_driver = "";
 
 // Window position:
 
-char *window_position = "center";
+const char *window_position = "center";
 
 // SDL display number on which to run.
 
@@ -1918,8 +1918,8 @@ void I_BindVideoVariables(void)
     M_BindIntVariable("window_width",              &window_width);
     M_BindIntVariable("window_height",             &window_height);
     M_BindIntVariable("grabmouse",                 &grabmouse);
-    M_BindStringVariable("video_driver",           &video_driver);
-    M_BindStringVariable("window_position",        &window_position);
+    M_BindStringVariable("video_driver",           const_cast<char**>(&video_driver));
+    M_BindStringVariable("window_position",        const_cast<char**>(&window_position));
     M_BindIntVariable("usegamma",                  &usegamma);
     M_BindIntVariable("png_screenshots",           &png_screenshots);
 }

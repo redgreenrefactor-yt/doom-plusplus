@@ -31,7 +31,10 @@
 #include "w_wad.hpp"
 #include "z_zone.hpp"
 
+extern "C"
+{
 #include "opl.h"
+}
 #include "midifile.hpp"
 
 // #define OPL_MIDI_DEBUG

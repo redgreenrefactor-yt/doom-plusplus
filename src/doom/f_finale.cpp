@@ -41,6 +41,8 @@
 #include "m_misc.hpp" // [crispy] M_StringDuplicate()
 #include "m_random.hpp" // [crispy] Crispy_Random()
 
+#include "actions_fwd_decl.hpp"
+
 typedef enum finalestage_t
 {
     F_STAGE_TEXT,
@@ -113,8 +115,6 @@ void	F_StartCast (void);
 void	F_CastTicker (void);
 boolean F_CastResponder (event_t *ev);
 void	F_CastDrawer (void);
-
-extern void A_RandomJump();
 
 //
 // F_StartFinale
@@ -441,29 +441,9 @@ static int F_RandomizeSound (int sound)
 	}
 }
 
-extern void A_BruisAttack();
-extern void A_BspiAttack();
-extern void A_CPosAttack();
-extern void A_CPosRefire();
-extern void A_CyberAttack();
-extern void A_FatAttack1();
-extern void A_FatAttack2();
-extern void A_FatAttack3();
-extern void A_HeadAttack();
-extern void A_PainAttack();
-extern void A_PosAttack();
-extern void A_SargAttack();
-extern void A_SkelFist();
-extern void A_SkelMissile();
-extern void A_SkelWhoosh();
-extern void A_SkullAttack();
-extern void A_SPosAttack();
-extern void A_TroopAttack();
-extern void A_VileTarget();
-
 typedef struct actionsound_t
 {
-	void (*action)();
+	actionf_t action;
 	const int sound;
 	const boolean early;
 
@@ -495,11 +475,11 @@ static const actionsound_t actionsounds[] =
 // [crispy] play attack sound based on state action function (instead of state number)
 static int F_SoundForState (int st)
 {
-	void *const castaction = (void *) caststate->action.acv;
-	void *const nextaction = (void *) (&states[caststate->nextstate])->action.acv;
+	const actionf_t castaction = caststate->action;
+	const actionf_t nextaction = (&states[caststate->nextstate])->action;
 
 	// [crispy] fix Doomguy in casting sequence
-	if (castaction == NULL)
+	if (castaction.acv == nullptr)
 	{
 		if (st == S_PLAY_ATK2)
 			return sfx_dshtgn;
@@ -514,8 +494,8 @@ static int F_SoundForState (int st)
 		{
 			const actionsound_t *const as = &actionsounds[i];
 
-			if ((!as->early && castaction == as->action) ||
-			    (as->early && nextaction == as->action))
+			if ((!as->early && castaction.acv == as->action.acv) ||
+			    (as->early && nextaction.acv == as->action.acv))
 			{
 				return as->sound;
 			}
@@ -583,7 +563,7 @@ void F_CastTicker (void)
 	    goto stopattack;	// Oh, gross hack!
 	*/
 	// [crispy] Allow A_RandomJump() in deaths in cast sequence
-	if (caststate->action.acp1 == reinterpret_cast<actionf_p1>(A_RandomJump) && Crispy_Random() < caststate->misc2)
+	if (caststate->action.acp3 == reinterpret_cast<actionf_p3>(A_RandomJump) && Crispy_Random() < caststate->misc2)
 	{
 	    st = caststate->misc1;
 	}

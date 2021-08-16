@@ -34,13 +34,13 @@
 //	M_Menu.C
 //
 
-const char* QUITMSG     = "are you sure you want to\nquit this great game?";
-const char* LOADNET     = "you can't do load while in a net game!\n\npress a key.";
-const char* QLOADNET    = "you can't quickload during a netgame!\n\npress a key.";
-const char* QSAVESPOT   = "you haven't picked a quicksave slot yet!\n\npress a key.";
-const char* SAVEDEAD    = "you can't save if you aren't playing!\n\npress a key.";
-const char* QSPROMPT    = "quicksave over your game named\n\n'%s'?\n\npress y or n.";
-const char* QLPROMPT    = "do you want to quickload the game named\n\n'%s'?\n\npress y or n.";
+inline const char* QUITMSG     = "are you sure you want to\nquit this great game?";
+inline const char* LOADNET     = "you can't do load while in a net game!\n\npress a key.";
+inline const char* QLOADNET    = "you can't quickload during a netgame!\n\npress a key.";
+inline const char* QSAVESPOT   = "you haven't picked a quicksave slot yet!\n\npress a key.";
+inline const char* SAVEDEAD    = "you can't save if you aren't playing!\n\npress a key.";
+inline const char* QSPROMPT    = "quicksave over your game named\n\n'%s'?\n\npress y or n.";
+inline const char* QLPROMPT    = "do you want to quickload the game named\n\n'%s'?\n\npress y or n.";
 
 #define NEWGAME	\
 "you can't start a new game\n"\

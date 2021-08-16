@@ -48,6 +48,8 @@
 #include "w_wad.hpp"
 #include "z_zone.hpp"
 
+#include <string_view>
+
 //
 // Create a directory
 //
@@ -269,19 +271,20 @@ boolean M_StrToInt(const char *str, int *result)
 // slash separator character. If no directory is described in the path,
 // the string "." is returned. In either case, the result is newly allocated
 // and must be freed by the caller after use.
-char *M_DirName(char *path)
+char *M_DirName(const char *path)
 {
     char *p, *result;
 
-    p = strrchr(path, DIR_SEPARATOR);
-    if (p == NULL)
+    std::string_view path_str{path};
+    auto lastOccurrence = path_str.find_last_of(DIR_SEPARATOR);
+    if (lastOccurrence == std::string_view::npos)
     {
         return M_StringDuplicate(".");
     }
     else
     {
-        result = M_StringDuplicate(path);
-        result[p - path] = '\0';
+        result = M_StringDuplicate(
+                path_str.substr(0, lastOccurrence +1 ).data());
         return result;
     }
 }

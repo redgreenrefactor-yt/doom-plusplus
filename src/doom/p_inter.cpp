@@ -39,6 +39,7 @@
 
 #include "p_inter.hpp"
 
+#include <array>
 
 #define BONUSADD	6
 
@@ -162,7 +163,7 @@ P_GiveAmmo
 
 
 // [crispy] show weapon pickup messages in multiplayer games
-const char *const WeaponPickupMessages[NUMWEAPONS] =
+std::array<const char *const, NUMWEAPONS> WeaponPickupMessages =
 {
 	NULL, // wp_fist
 	NULL, // wp_pistol

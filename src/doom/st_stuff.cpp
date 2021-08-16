@@ -63,6 +63,8 @@
 
 #include "v_trans.hpp" // [crispy] colored cheat messages
 
+#include <array>
+
 extern int screenblocks; // [crispy] for the Crispy HUD
 extern boolean inhelpscreens; // [crispy] prevent palette changes
 
@@ -1124,7 +1126,7 @@ ST_Responder (event_t* ev)
 	    if (!plyr->weaponowned[w])
 	    {
 		extern boolean P_GiveWeapon (player_t* player, weapontype_t weapon, boolean dropped);
-		extern const char *const WeaponPickupMessages[NUMWEAPONS];
+		extern std::array<const char *const, NUMWEAPONS> WeaponPickupMessages;
 
 		P_GiveWeapon(plyr, static_cast<weapontype_t >(w), false);
 		S_StartSound(NULL, sfx_wpnup);

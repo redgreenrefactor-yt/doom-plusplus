@@ -37,14 +37,30 @@ typedef  void (*actionf_p1)( void* );
 typedef  void (*actionf_p2)( void*, void* );
 typedef  void (*actionf_p3)( void*, void*, void* ); // [crispy] let pspr action pointers get called from mobj states
 
-typedef union
+union  actionf_t
 {
+    actionf_t() = default;
+
+    actionf_t(void (*func)())
+            : acv(func)
+    {}
+
+    template<typename Param>
+    actionf_t(void (*func)(Param*))
+        : acp1(reinterpret_cast<actionf_p1>(func))
+    {}
+
+    template<typename Param1, typename Param2, typename Param3>
+    actionf_t(void (*func)(Param1*, Param2*, Param3*))
+        : acp3(reinterpret_cast<actionf_p3>(func))
+    {}
+
   actionf_v	acv;
   actionf_p1	acp1;
   actionf_p2	acp2;
   actionf_p3	acp3; // [crispy] let pspr action pointers get called from mobj states
 
-} actionf_t;
+};
 
 
 

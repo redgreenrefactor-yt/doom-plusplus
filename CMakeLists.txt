@@ -2,6 +2,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 cmake_minimum_required(VERSION 3.12)
 project("Crispy Doom" VERSION 5.10.1 LANGUAGES C CXX)
+set(CMAKE_CXX_STANDARD 20)
 
 # Autotools variables
 set(top_srcdir ${CMAKE_CURRENT_SOURCE_DIR})

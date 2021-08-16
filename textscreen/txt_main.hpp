@@ -138,13 +138,13 @@ typedef enum txt_input_mode_t
 
 // Initialize the screen
 // Returns 1 if successful, 0 if failed.
-int TXT_Init(void);
+int TXT_Init();
 
 // Shut down text mode emulation
-void TXT_Shutdown(void);
+void TXT_Shutdown();
 
 // Get a pointer to the buffer containing the raw screen data.
-unsigned char *TXT_GetScreenData(void);
+unsigned char *TXT_GetScreenData();
 
 // Update an area of the screen
 void TXT_UpdateScreenArea(int x, int y, int w, int h);
